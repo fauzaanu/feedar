@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'home/search_bar.html' with meaning=meaning word=word %}
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // for every word inside of .meanings make it a url with the word
+        // if the word is nurse it should be /explore/nurse
+        // use vanilla js
+        var meanings = document.querySelectorAll('.meanings');
+        meanings.forEach(function (meaning) {
+            // split the meaning into words
+            var words = meaning.textContent.split(' ');
+            var newMeaning = '';
+            words.forEach(function (word) {
+
+                // if the word is empty skip it or if its a space or if its a number
+                if (word === '' || word === ' ' || !isNaN(word)) {
+                    return;
+                }
+
+                newMeaning += '<a href="/explore/' + word + '" class="text-gray-600 leading-loose p-2 rounded bg-white border border-black">' + word + '</a> ';
+            });
+            meaning.innerHTML = newMeaning;
+            meaning.classList.add('border-black', 'p-2', 'leading-loose', 'm-5', 'border-y-2');
+        });
+    </script>
+
+{% endblock %}

@@ -19,6 +19,7 @@ django-crispy-forms = "^2.1"
 crispy-tailwind = "^1.0.0"
 python-dotenv = "^1.0.1"
 huey = "^2.5.0"
+dhivehi-nlp = "^1.0.13"
 
 
 [build-system]

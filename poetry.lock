@@ -47,6 +47,16 @@ django-crispy-forms = ">=2.0"
 test = ["pytest", "pytest-django"]
 
 [[package]]
+name = "dhivehi-nlp"
+version = "1.0.13"
+description = "Natural language processing tools for the Dhivehi language."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "dhivehi_nlp-1.0.13.tar.gz", hash = "sha256:d0db80759393045504ab36de4aabece7a7a2ad7f390788cfa033c50c66b31add"},
+]
+
+[[package]]
 name = "django"
 version = "5.0.1"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
@@ -368,4 +378,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "d068207349b1f01d7e575c6417d7723da0ac86f3e554cc5ff0fad44cf9e66b52"
+content-hash = "42b3dfabe7124342c5ed76acaff47f3f66a6613ceee195e2ccb029af0298ed9d"

@@ -6,13 +6,14 @@
 <head>
     {% include 'meta.html' %}
     {% include 'toast/toast_head.html' %}
+    {% include 'thaanakeyboard.html' %}
     {% block header_scripts %}
     {% endblock %}
 </head>
 <body>
 
 
-{% include 'header.html' %}
+{#{% include 'header.html' %}#}
 
 <main class="">
     {% block content %}
@@ -23,7 +24,7 @@
 {% block extra_js %}
 {% endblock %}
 
-{% include 'footer.html' %}
+{#{% include 'footer.html' %}#}
 {% include 'toast/toast_body.html' %}
 </body>
 </html>
