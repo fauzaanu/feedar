@@ -10,3 +10,8 @@ TODO:
 - [ ] Caching and redis setup
 - [ ] get ready to deploy
 
+Credits:
+
+These projects were used to build this project
+- dhivehi-nlp (https://github.com/mismaah/dhivehi_nlp)
+- ThaanaKeyboard (https://github.com/aharen/thaana-keyboard)
