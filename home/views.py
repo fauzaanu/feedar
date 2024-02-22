@@ -20,6 +20,8 @@ def home(request):
     return render(request, 'home/home.html')
 
 
+@cache_page(60 * 60 * 24 * 30,
+            key_prefix=SITE_VERSION)
 def search_english(request):
     word = request.POST.get('word')
 
@@ -33,7 +35,8 @@ def search_english(request):
     else:
         return HttpResponse('This is not a dhivehi word')
 
-
+@cache_page(60 * 60 * 24 * 30,
+            key_prefix=SITE_VERSION)
 def explore_word(request, word):
     if not word:
         return HttpResponse('Please enter a word')
