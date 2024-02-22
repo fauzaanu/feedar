@@ -1,11 +1,13 @@
+import os
 from string import ascii_letters, digits, punctuation
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
+from dotenv import load_dotenv
 
-from home.helpers import is_dhivehi_word, remove_punctuation
-from home.models import Word, Meaning
+from home.helpers import is_dhivehi_word, remove_punctuation, google_custom_search
+from home.models import Word, Meaning, SearchResponse, Webpage
 from mysite.settings.base import SITE_VERSION
 from dhivehi_nlp import dictionary, stemmer, tokenizer
 
@@ -123,12 +125,17 @@ def explore_word(request, word):
                                     if definition:
                                         Meaning.objects.get_or_create(meaning=definition, word=related_word)
 
+            search_result = google_custom_search(word)
+            search_result = search_result.response
+
+            for item in search_result['items']:
+                link = item['link']
+                title = item['title']
+                page, _ = Webpage.objects.get_or_create(url=link, title=title)
+                page.words.add(word_obj)
+
             context = {
                 'words': Word.objects.filter(word=word),
+                'search_result': Webpage.objects.filter(words__word=word)
             }
             return render(request, 'home/search_english.html', context)
-
-
-def word_usage_on_the_web(request, word):
-    # GET https://www.googleapis.com/customsearch/v1?key=[GOOGLE_SEARCH_API_KEY]&cx=[CX]&q=[word]&exactTerms=[word]
-    pass

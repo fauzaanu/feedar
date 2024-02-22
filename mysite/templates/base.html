@@ -10,10 +10,10 @@
     {% block header_scripts %}
     {% endblock %}
 </head>
-<body>
+<body class="max-w-screen-lg flex flex-col mx-auto justify-center">
 
 
-{#{% include 'header.html' %}#}
+{% include 'header.html' %}
 
 <main class="">
     {% block content %}
@@ -24,7 +24,7 @@
 {% block extra_js %}
 {% endblock %}
 
-{#{% include 'footer.html' %}#}
+{% include 'footer.html' %}
 {% include 'toast/toast_body.html' %}
 </body>
 </html>

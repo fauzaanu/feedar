@@ -26,8 +26,18 @@ class Webpage(models.Model):
     """
     url = models.URLField(unique=True)
     title = models.CharField(max_length=100)
-    body = models.TextField()
-    last_update = models.DateTimeField(auto_now=True)
+    words = models.ManyToManyField(Word)
 
     def __str__(self):
         return self.title
+
+
+class SearchResponse(models.Model):
+    word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    response = models.JSONField()
+
+    def __str__(self):
+        return f"{self.word} - {self.webpage} - {self.count}"
+
+    class Meta:
+        unique_together = ('word', 'response')

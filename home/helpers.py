@@ -1,4 +1,9 @@
+import os
 from string import ascii_letters, punctuation
+
+import requests
+
+from home.models import SearchResponse, Word
 
 
 def is_dhivehi_word(word: str):
@@ -47,3 +52,21 @@ def get_radheef_val(word):
         return [resp for resp in response.json()['data']]
     else:
         return None
+
+
+def google_custom_search(word):
+    word_obj, _ = Word.objects.get_or_create(word=word)
+
+    if SearchResponse.objects.filter(word=word_obj).exists():
+        return SearchResponse.objects.get(word=word_obj)
+
+    url = "https://www.googleapis.com/customsearch/v1"
+    params = {
+        'key': os.getenv('GOOGLE_SEARCH_API_KEY'),
+        'cx': os.getenv('CX'),
+        'q': word,
+        'exactTerms': word
+    }
+    response = requests.get(url, params=params)
+    search_results = SearchResponse.objects.create(word=word_obj, response=response.json())
+    return search_results
