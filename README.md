@@ -1,6 +1,11 @@
-## FEEDAR or RADEEF?
 
-word by word searching for dhivehi radheef just an idea that flashed on me on mother language day 2024
+![radeef_t](https://github.com/fauzaanu/feedar/assets/86226565/173a8f19-e114-4506-a9dd-93db3bff2d42)
+
+Features:
+- Every word in the definition is a click to search
+- Google Search API to get top 10 for the word
+- Words that dont have a definition, are reverse searched to get other words that include the word within the words definition
+- TBA
 
 TODO:
 
