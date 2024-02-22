@@ -5,7 +5,7 @@
 - Every word in the definition is a click to search
 - Google Search API to get top 10 for the word
 - Words that dont have a definition, are reverse searched to get other words that include the word within the words definition
-- More . . ?
+- add Adobe Stock for images
 
 ## TODO
 
