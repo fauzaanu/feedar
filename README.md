@@ -1,4 +1,4 @@
-<img src="https://github.com/fauzaanu/feedar/assets/86226565/9461479a-e2fc-4748-a154-6512381a53d8" />
+<img src="https://github.com/fauzaanu/feedar/assets/86226565/6182de49-75fa-40a7-bb89-40861e01e887" />
 
 ## Features
 
