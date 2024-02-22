@@ -10,8 +10,14 @@
     {% block header_scripts %}
     {% endblock %}
 </head>
-<body class="max-w-screen-lg flex flex-col mx-auto justify-center">
-
+<body oncontextmenu="return false"
+      class="max-w-screen-lg flex flex-col mx-auto justify-center">
+<style>
+    * {
+        user-select: none;
+        -webkit-user-select: none;
+    }
+</style>
 
 {% include 'header.html' %}
 
