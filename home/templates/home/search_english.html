@@ -21,10 +21,10 @@
                     return;
                 }
 
-                newMeaning += '<a href="/explore/' + word + '" class="text-gray-600 leading-loose p-2 rounded bg-white border border-black">' + word + '</a> ';
+                newMeaning += '<a href="/explore/' + word + '" class="text-gray-600 leading-loose p-2 rounded bg-white border-b border-black">' + word + '</a> ';
             });
             meaning.innerHTML = newMeaning;
-            meaning.classList.add('border-black', 'p-2', 'leading-loose', 'm-5', 'border-y-2');
+            meaning.classList.add('p-2', 'leading-loose');
         });
     </script>
 

@@ -20,6 +20,7 @@ crispy-tailwind = "^1.0.0"
 python-dotenv = "^1.0.1"
 huey = "^2.5.0"
 dhivehi-nlp = "^1.0.13"
+requests = "^2.31.0"
 
 
 [build-system]

@@ -1,11 +1,23 @@
-<div class="flex items-center justify-center h-screen">
+<div class="flex">
     <div class="w-full p-5">
-        <div dir="rtl" class="border border-black rounded p-5 bg-black/5">
-            <h1 class="text-3xl font-bold mb-2">{{ word }}</h1>
-            {% for mean in meaning %}
-                <p class="leading-loose meanings flex gap-2 flex-wrap">{{ mean }}</p>
-            {% endfor %}
+        <div dir="rtl" class="flex flex-col border border-black rounded p-5 bg-black/5 overflow-y-scroll h-screen">
+            {% if words %}
+                {% for word in words %}
+                    <h1 class="text-3xl font-bold mb-2">{{ word }}</h1>
+                    {% for meaning in word.meanings.all %}
+                        <p class="leading-loose meanings flex gap-2 flex-wrap">{{ meaning }}</p>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
         </div>
+
+        {#        <div dir="rtl" class="flex flex-col border border-black rounded p-5 bg-black/5 overflow-y-scroll h-screen">#}
+        {#            <h1 class="text-3xl font-bold mb-2">{{ word }}</h1>#}
+        {#            {% for mean in meaning %}#}
+        {#                <p class="leading-loose meanings flex gap-2 flex-wrap">{{ mean }}</p>#}
+        {#            {% endfor %}#}
+        {#        </div>#}
+
 
         <hr>
         <p class="text-gray-500 my-10 text-center text-2xl">ނުވަތަ</p>
