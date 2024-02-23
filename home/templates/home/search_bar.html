@@ -1,6 +1,21 @@
 <div class="flex">
     <div class="w-full p-5">
         <div dir="rtl" class="flex flex-col border-2 border-black rounded p-5">
+
+            {% if related_only %}
+
+                <div class="flex bg-dv_white gap-2 text-primary p-5 text-lg font-faruma" dir="rtl">
+                    <div class="underline decoration-dv_red">{{ word }}</div>
+                    <div class="underline decoration-dv_red">
+                        މިބަހުގެ ސީދާ މާނަ ރަދީފުގައި ނެތުމުން،ތިރީގައި މި ހިމަނާލަނީ މި ބަސް މާނައިގައި އެކުލެވޭ އެހެން
+                        ބަސްތައް
+                    </div>
+
+                </div>
+            {% endif %}
+
+
+
             {% if words %}
                 {% for word in words %}
                     <h1 class="text-9xl mb-2 font-sangu">

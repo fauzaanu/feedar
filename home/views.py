@@ -75,6 +75,8 @@ def explore_word(request, word):
                                     Meaning.objects.get_or_create(meaning=mean, word=word_obj)
 
                 context = {
+                    'related_only': True,
+                    'word': word,
                     'words': Word.objects.filter(related_words__word=word),
                     'title': PAGE_TITLE
                 }
