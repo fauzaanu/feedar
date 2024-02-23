@@ -3,19 +3,7 @@
 
 {% block content %}
     <div class="flex flex-col justify-center items-center">
-
-        <form action="{% url 'search_english' %}" method="post">
-            {% csrf_token %}
-            <input type="text" name="word"
-                   dir="rtl"
-                   autocomplete="off"
-                   class="w-full border-2 border-gray-300 p-3 rounded-lg focus:outline-none focus:border-blue-500 thaana-keyboard"
-                   placeholder="ބަހުގެ ނަން ޖަހާލާ. . . މިސާލަކަށް: ދިވެހިރާއްޖެ">
-            <button type="submit"
-                    class="w-full bg-blue-600 text-white p-3 rounded-lg mt-3">
-                ހޯދާ
-            </button>
-        </form>
+       {% include 'home/search_form.html' %}
     </div>
 {% endblock %}
 

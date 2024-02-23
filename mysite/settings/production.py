@@ -10,7 +10,7 @@ ALLOWED_HOSTS = [
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://radheefu.com/",
+    "https://radheefu.com",
 ]
 
 # Database

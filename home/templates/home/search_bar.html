@@ -25,23 +25,10 @@
                             </div>
                         {% endfor %}
                     </div>
-
-
                 </div>
             </div>
 
-            <form action="{% url 'search_english' %}" method="post">
-                {% csrf_token %}
-                <input type="text" name="word"
-                       dir="rtl"
-                       autocomplete="off"
-                       class="w-full border-2 border-dv_red p-3 rounded-lg focus:outline-none focus:border-dv_green thaana-keyboard bg-primary text-dv_red"
-                       placeholder="ބަހުގެ ނަން ޖަހާލާ. . . މިސާލަކަށް: ދިވެހިރާއްޖެ">
-                <button type="submit"
-                        class="w-full bg-gradient-to-r from-dv_red to-dv_green via-transparent text-white font-sangu text-5xl p-3 rounded-lg mt-3 border-dv_white border-2">
-                    އެހެން ބަހެއް ހޯދާލާ
-                </button>
-            </form>
+            {% include 'home/search_form.html' %}
         </div>
     </div>
 </div>
