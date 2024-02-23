@@ -87,53 +87,22 @@ def explore_word(request, word):
 
             for mean in meaning:
                 mean = remove_punctuation(mean)
-
                 if mean:
                     Meaning.objects.get_or_create(meaning=mean, word=word_obj)
 
             word_length = len(word)
             for i in range(word_length):
                 wrd = word[:word_length - i]
-
                 meaning = dictionary.get_definition(wrd)
-
                 if meaning:
                     related_word, _ = Word.objects.get_or_create(word=wrd)
                     word_obj.related_words.add(related_word)
                     word_obj.save()
 
                     for meaning_item in meaning:
-
                         meaning_item = remove_punctuation(meaning_item)
                         if meaning_item:
                             Meaning.objects.get_or_create(meaning=meaning_item, word=related_word)
-
-                        meaning_item = remove_punctuation(meaning_item)
-
-                        if meaning_item:
-                            related_word, _ = Word.objects.get_or_create(word=meaning_item)
-                            word_obj.related_words.add(related_word)
-                            word_obj.save()
-
-                            meaning = dictionary.get_definition(meaning_item)
-                            for mean in meaning:
-                                mean = remove_punctuation(mean)
-                                if mean:
-                                    Meaning.objects.get_or_create(meaning=mean, word=related_word)
-
-                        # # Get more words
-                        # words = tokenizer.word_tokenize(meaning_item)
-                        # for wrd in words:
-                        #     mn = dictionary.get_definition(wrd)
-                        #
-                        #     if mn:
-                        #         related_word, _ = Word.objects.get_or_create(word=wrd)
-                        #         word_obj.related_words.add(related_word)
-                        #         word_obj.save()
-                        #         for definition in mn:
-                        #             definition = remove_punctuation(definition)
-                        #             if definition:
-                        #                 Meaning.objects.get_or_create(meaning=definition, word=related_word)
 
             search_result = google_custom_search(word)
             if search_result:
