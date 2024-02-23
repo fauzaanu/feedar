@@ -13,6 +13,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://radheefu.com",
 ]
 
+CSRF_COOKIE_DOMAIN = "radheefu.com"
+CSRF_COOKIE_SECURE = True
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 DATABASES = {
