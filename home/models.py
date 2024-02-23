@@ -42,6 +42,3 @@ class SearchResponse(models.Model):
 
     def __str__(self):
         return f"{self.word} - {self.webpage} - {self.count}"
-
-    class Meta:
-        unique_together = ('word', 'response')
