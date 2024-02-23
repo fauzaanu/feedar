@@ -1,20 +1,31 @@
 {% load static %}
 
-<meta charset="utf-8"/>
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-<link rel="icon" type="image/x-icon" href="{% static 'logo/favicon.ico' %}">
-
 <title>
     {% block title %}
+        RADHEEFU
     {% endblock %}
 </title>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link rel="icon" type="image/x-icon" href="{% static 'favicon/favicon.ico' %}">
 
-{# Force all links in the live preview panel to be opened in a new tab #}
-{% if request.in_preview_panel %}
-    <base target="_blank">
-{% endif %}
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="icon" type="image/x-icon" href="{% static 'pwa/favicons/favicon.ico' %}">
+
+<meta name='og:title' content='RADHEEFU'>
+<meta name='og:url' content='https://radheefu.com'>
+<meta name='og:image' content='http://ia.media-imdb.com/rock.jpg'>
+<meta name='og:site_name' content='RADHEEFU'>
+<meta name='og:description' content='Dhivehi Radheefu'>
+
+<meta name="apple-mobile-web-app-title" content="RADHEEFU"> <!-- New in iOS6 -->
+<meta name='apple-mobile-web-app-capable' content='yes'>
+<meta name='apple-touch-fullscreen' content='yes'>
+<meta name='apple-mobile-web-app-status-bar-style' content='black'>
+<meta name='format-detection' content='telephone=no'>
+<meta name='viewport' content='width=device-width; content='width = 320; initial-scale=1.0; maximum-scale=1.0; user-scalable=yes; target-densitydpi=160dpi'>
+
+<link href='{% static 'pwa/favicons/apple-touch-icon.png' %}' rel='apple-touch-icon' type='image/png'>
+
 
 {% block extra_css %}
     {# Override this in templates to add extra stylesheets #}
