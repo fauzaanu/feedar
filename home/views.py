@@ -121,19 +121,19 @@ def explore_word(request, word):
                                 if mean:
                                     Meaning.objects.get_or_create(meaning=mean, word=related_word)
 
-                        # Get more words
-                        words = tokenizer.word_tokenize(meaning_item)
-                        for wrd in words:
-                            mn = dictionary.get_definition(wrd)
-
-                            if mn:
-                                related_word, _ = Word.objects.get_or_create(word=wrd)
-                                word_obj.related_words.add(related_word)
-                                word_obj.save()
-                                for definition in mn:
-                                    definition = remove_punctuation(definition)
-                                    if definition:
-                                        Meaning.objects.get_or_create(meaning=definition, word=related_word)
+                        # # Get more words
+                        # words = tokenizer.word_tokenize(meaning_item)
+                        # for wrd in words:
+                        #     mn = dictionary.get_definition(wrd)
+                        #
+                        #     if mn:
+                        #         related_word, _ = Word.objects.get_or_create(word=wrd)
+                        #         word_obj.related_words.add(related_word)
+                        #         word_obj.save()
+                        #         for definition in mn:
+                        #             definition = remove_punctuation(definition)
+                        #             if definition:
+                        #                 Meaning.objects.get_or_create(meaning=definition, word=related_word)
 
             search_result = google_custom_search(word)
             if search_result:
