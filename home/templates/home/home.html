@@ -3,10 +3,6 @@
 
 {% block content %}
     <div class="flex flex-col justify-center items-center">
-        <h1 class="text-2xl font-bold mb-2 text-center" dir="rtl">
-            ބަހެއް ޖައްސަވާ
-        </h1>
-
 
         <form action="{% url 'search_english' %}" method="post">
             {% csrf_token %}

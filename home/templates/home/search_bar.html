@@ -1,50 +1,47 @@
 <div class="flex">
     <div class="w-full p-5">
-        <div dir="rtl" class="flex flex-col border-2 border-black rounded p-5 bg-black/5 overflow-y-scroll">
+        <div dir="rtl" class="flex flex-col border-2 border-black rounded p-5">
             {% if words %}
                 {% for word in words %}
-                    <h1 class="text-5xl font-bold mb-2">{{ word }}</h1>
+                    <h1 class="text-9xl mb-2 font-sangu">
+                        {{ word }}
+                    </h1>
                     {% for meaning in word.meanings.all %}
-                        <p class="leading-loose meanings flex gap-2 flex-wrap">{{ meaning }}</p>
+                        <p class="leading-loose meanings flex gap-2 flex-wrap border-b border-dv_white">{{ meaning }}</p>
                     {% endfor %}
                 {% endfor %}
             {% endif %}
 
             <div dir="rtl" class="flex flex-col py-10">
                 <div>
-                    <h2 class="text-3xl font-bold mb-2">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
-                    <div class="flex flex-col">
-                        <ol>
-                            {% for result in search_result %}
-                                <li class="mx-5 list-decimal">
-                                    <a href="{{ result.url }}"
-                                       class="text-black underline p-2"
-                                    >
-                                        {{ result.title }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ol>
+                    <h2 class="text-5xl mb-2 font-sangu">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
+                    <div class="flex flex-col gap-2 text-primary">
+                        {% for result in search_result %}
+                            <div onclick="location.href='{{ result.url }}'"
+                                 class="flex font-mono align-middle justify-center text-left rounded p-5 gap-2 underline cursor-pointer bg-dv_green "
+                            >
+                                {{ result.get_domain }}
+                                {% include 'icons/globe.svg' %}
+                            </div>
+                        {% endfor %}
                     </div>
+
+
                 </div>
             </div>
-
-            <p class="text-gray-500 my-10 text-center text-2xl">ނުވަތަ</p>
-            <h1 class="text-2xl font-bold mb-2 text-center" dir="rtl">އެހެން ބަހެއް ހޯދާލާ</h1>
-
 
             <form action="{% url 'search_english' %}" method="post">
                 {% csrf_token %}
                 <input type="text" name="word"
                        dir="rtl"
                        autocomplete="off"
-                       class="w-full border-2 border-gray-300 p-3 rounded-lg focus:outline-none focus:border-blue-500 thaana-keyboard"
+                       class="w-full border-2 border-dv_red p-3 rounded-lg focus:outline-none focus:border-dv_green thaana-keyboard bg-primary text-dv_red"
                        placeholder="ބަހުގެ ނަން ޖަހާލާ. . . މިސާލަކަށް: ދިވެހިރާއްޖެ">
                 <button type="submit"
-                        class="w-full bg-blue-600 text-white p-3 rounded-lg mt-3">
-                    ހޯދާ
+                        class="w-full bg-gradient-to-r from-dv_red to-dv_green via-transparent text-white font-sangu text-5xl p-3 rounded-lg mt-3 border-dv_white border-2">
+                    އެހެން ބަހެއް ހޯދާލާ
                 </button>
             </form>
         </div>
     </div>
-
+</div>

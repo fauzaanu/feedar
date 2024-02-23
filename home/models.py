@@ -27,9 +27,13 @@ class Webpage(models.Model):
     url = models.URLField(unique=True)
     title = models.CharField(max_length=100)
     words = models.ManyToManyField(Word)
+    image_link = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.title
+
+    def get_domain(self):
+        return self.url.split('/')[2]
 
 
 class SearchResponse(models.Model):

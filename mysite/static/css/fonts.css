@@ -1,0 +1,14 @@
+/* Fonts.css */
+
+
+@font-face {
+    font-family: "faruma";
+    src: url("faruma.otf");
+}
+
+@font-face {
+    font-family: "sangu";
+    src: url("SanguSuruhee-Regular.ttf");
+}
+
+
