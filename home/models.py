@@ -43,3 +43,9 @@ class SearchResponse(models.Model):
 
     def __str__(self):
         return f"{self.word} - {self.webpage} - {self.count}"
+
+
+class IndexQueue(models.Model):
+    word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
+    processed = models.BooleanField(default=False)

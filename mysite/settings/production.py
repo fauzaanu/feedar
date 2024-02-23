@@ -64,3 +64,9 @@ LOGGING = {
         "level": "ERROR",
     },
 }
+
+from huey import RedisHuey
+from redis import ConnectionPool
+
+pool = ConnectionPool()
+HUEY = RedisHuey(SITE_NAME, connection_pool=pool.from_url(REDIS_URL))

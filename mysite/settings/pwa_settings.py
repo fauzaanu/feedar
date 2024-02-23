@@ -1,5 +1,0 @@
-PWA_APP_NAME = "RADHEEFU"
-PWA_APP_THEME_COLOR = "#fff"
-PWA_APP_STATUS_BAR_COLOR = "#fff"
-PWA_APP_SPLASH_SCREEN = "/static/images/splash.jpg"
-PWA_APP_BACKGROUND_COLOR = "#fff"
