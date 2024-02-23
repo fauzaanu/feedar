@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    {{ title }}
+{% endblock %}
+
 {% block content %}
     {% include 'home/search_bar.html' with meaning=meaning word=word %}
 {% endblock %}

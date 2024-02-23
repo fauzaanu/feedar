@@ -40,6 +40,8 @@ def search_english(request):
 @cache_page(60 * 60 * 24 * 30,
             key_prefix=SITE_VERSION)
 def explore_word(request, word):
+    PAGE_TITLE = "Dhivehi Radheef for " + word + " | Radheefu.com"
+
     if not word:
         return HttpResponse('Please enter a word')
 
@@ -74,6 +76,7 @@ def explore_word(request, word):
 
                 context = {
                     'words': Word.objects.filter(related_words__word=word),
+                    'title': PAGE_TITLE
                 }
                 return render(request, 'home/search_english.html', context)
 
@@ -136,7 +139,6 @@ def explore_word(request, word):
             # search result has a { } json object
             search_result = json.loads(search_result)
 
-
             for item in search_result['items']:
                 link = item['link']
                 title = item['title']
@@ -163,6 +165,7 @@ def explore_word(request, word):
                 page.words.add(word_obj)
 
             context = {
+                'title': PAGE_TITLE,
                 'words': Word.objects.filter(word=word),
                 'search_result': Webpage.objects.filter(words__word=word)
             }
