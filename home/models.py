@@ -24,7 +24,7 @@ class Webpage(models.Model):
     """
     We store the url, of the webpage that mentions the word
     """
-    url = models.URLField(unique=True)
+    url = models.URLField(unique=True, max_length=1000)
     title = models.CharField(max_length=100)
     words = models.ManyToManyField(Word)
     image_link = models.URLField(blank=True, null=True)
