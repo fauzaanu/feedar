@@ -37,6 +37,7 @@ class Webpage(models.Model):
 
 
 class SearchResponse(models.Model):
+    date = models.DateField(auto_now_add=True, blank=True, null=True)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     response = models.TextField(db_index=False)
 

@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import date
 from string import ascii_letters, punctuation
 
 import requests
@@ -61,6 +62,12 @@ def google_custom_search(word):
 
     if SearchResponse.objects.filter(word=word_obj).exists():
         return SearchResponse.objects.get(word=word_obj)
+
+    # check if our daily limit is above 100
+    current_requests = SearchResponse.objects.filter(date=date.today()).count()
+    print(current_requests)
+    if current_requests > 100:
+        return None
 
     url = "https://www.googleapis.com/customsearch/v1"
     params = {

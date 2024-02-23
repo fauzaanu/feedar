@@ -136,39 +136,40 @@ def explore_word(request, word):
                                         Meaning.objects.get_or_create(meaning=definition, word=related_word)
 
             search_result = google_custom_search(word)
-            search_result = search_result.response
+            if search_result:
+                search_result = search_result.response
 
-            # search result has a { } json object
-            search_result = json.loads(search_result)
+                # search result has a { } json object
+                search_result = json.loads(search_result)
 
-            for item in search_result['items']:
-                link = item['link']
-                title = item['title']
+                for item in search_result['items']:
+                    link = item['link']
+                    title = item['title']
 
-                # find a .jpg or .png image from the item string
-                item_str = str(item)
-                image_link = None
-                begins_with = ['http://', 'https://']
-                ends_with = ['.jpg', '.png', '.jpeg', '.webp']
+                    # find a .jpg or .png image from the item string
+                    item_str = str(item)
+                    image_link = None
+                    begins_with = ['http://', 'https://']
+                    ends_with = ['.jpg', '.png', '.jpeg', '.webp']
 
-                # find the first image in the item string
-                for image_end in ends_with:
-                    imgage = item_str.find(image_end)
-                    if imgage != -1:
-                        # find the first http or https before the image
-                        for start in begins_with:
-                            start_index = item_str.rfind(start, 0, imgage)
-                            if start_index != -1:
-                                image_link = item_str[start_index:imgage + len(image_end)]
-                                break
+                    # find the first image in the item string
+                    for image_end in ends_with:
+                        imgage = item_str.find(image_end)
+                        if imgage != -1:
+                            # find the first http or https before the image
+                            for start in begins_with:
+                                start_index = item_str.rfind(start, 0, imgage)
+                                if start_index != -1:
+                                    image_link = item_str[start_index:imgage + len(image_end)]
+                                    break
 
-                image_link = image_link if image_link else None
-                page, _ = Webpage.objects.get_or_create(url=link, title=title, image_link=image_link)
-                page.words.add(word_obj)
+                    image_link = image_link if image_link else None
+                    page, _ = Webpage.objects.get_or_create(url=link, title=title, image_link=image_link)
+                    page.words.add(word_obj)
 
-            context = {
-                'title': PAGE_TITLE,
-                'words': Word.objects.filter(word=word),
-                'search_result': Webpage.objects.filter(words__word=word)
-            }
-            return render(request, 'home/search_english.html', context)
+                context = {
+                    'title': PAGE_TITLE,
+                    'words': Word.objects.filter(word=word),
+                    'search_result': Webpage.objects.filter(words__word=word)
+                }
+                return render(request, 'home/search_english.html', context)
