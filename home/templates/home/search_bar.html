@@ -15,7 +15,7 @@
 
             {% if words %}
                 {% for word in words %}
-                    <h1 class="text-5xl mb-2 font-sangu">
+                    <h1 class="text-3xl md:text-5xl mb-2 font-sangu">
                         {{ word }}
                     </h1>
                     {% for meaning in word.meanings.all %}
@@ -27,7 +27,7 @@
             {% if search_result %}
                 <div dir="rtl" class="flex flex-col py-10">
                     <div>
-                        <h2 class="text-5xl mb-2 font-sangu">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
+                        <h2 class="text-3xl md:text-5xl  mb-2 font-sangu">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
                         <div class="flex flex-col gap-2 text-primary">
                             {% for result in search_result %}
                                 <div onclick="location.href='{{ result.url }}'"
