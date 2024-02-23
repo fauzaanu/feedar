@@ -7,7 +7,7 @@ from home.models import SearchResponse, Word, IndexQueue
 
 
 # run every 15 minutes
-@periodic_task(run_every=crontab(minute="*/15"))
+@periodic_task(crontab(minute=0, hour=0))
 def word_indexing_process():
     """
     Google Search engine has a free limit of 100 requests per day.
