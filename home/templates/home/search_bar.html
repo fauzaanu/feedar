@@ -27,21 +27,23 @@
                 {% endfor %}
             {% endif %}
 
-            <div dir="rtl" class="flex flex-col py-10">
-                <div>
-                    <h2 class="text-5xl mb-2 font-sangu">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
-                    <div class="flex flex-col gap-2 text-primary">
-                        {% for result in search_result %}
-                            <div onclick="location.href='{{ result.url }}'"
-                                 class="flex font-mono align-middle justify-center text-left rounded p-5 gap-2 underline cursor-pointer bg-dv_green "
-                            >
-                                {{ result.get_domain }}
-                                {% include 'icons/globe.svg' %}
-                            </div>
-                        {% endfor %}
+            {% if search_result %}
+                <div dir="rtl" class="flex flex-col py-10">
+                    <div>
+                        <h2 class="text-5xl mb-2 font-sangu">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
+                        <div class="flex flex-col gap-2 text-primary">
+                            {% for result in search_result %}
+                                <div onclick="location.href='{{ result.url }}'"
+                                     class="flex font-mono align-middle justify-center text-left rounded p-5 gap-2 underline cursor-pointer bg-dv_green "
+                                >
+                                    {{ result.get_domain }}
+                                    {% include 'icons/globe.svg' %}
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
 
             {% include 'home/search_form.html' %}
         </div>
