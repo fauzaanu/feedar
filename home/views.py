@@ -24,7 +24,7 @@ def home(request):
 @cache_page(60 * 60 * 24 * 30,
             key_prefix=SITE_VERSION)
 def search_english(request):
-    word = request.POST.get('word')
+    word = request.GET.get('word')
 
     if not word:
         return HttpResponse('Please enter a word')
