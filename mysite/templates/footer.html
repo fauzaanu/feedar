@@ -1,15 +1,16 @@
-<footer class="flex flex-col mx-auto bg-secondary items-center  py-10 font-mono">
-    <p class="flex gap-2">
-        {% include 'icons/github.svg' %}
-        <a href="https://github.com/fauzaanu/feedar" class="href">github.com/fauzaanu/feedar</a>
-
-    </p>
-    <p class="text-black/30 flex flex-col">
-    <div class="flex gap-2">
-        {% include 'icons/voicemail.svg' %}
-        <a class="underline"
-           href="https://t.me/fauzaanu">@fauzaanu</a>
+<footer class="">
+    <div class="flex flex-col mx-auto items-center py-10 font-mono">
+        <p class="flex gap-2">
+            {% include 'icons/github.svg' %}
+            <a href="https://github.com/fauzaanu/feedar" class="href">github.com/fauzaanu/feedar</a>
+        </p>
+        <p class="text-black/30 flex flex-col">
+        <div class="flex gap-2">
+            {% include 'icons/voicemail.svg' %}
+            <a class="underline"
+               href="https://t.me/fauzaanu">@fauzaanu</a>
+        </div>
+        ©{% now "Y" %}
+        </p>
     </div>
-    ©{% now "Y" %}
-    </p>
 </footer>
