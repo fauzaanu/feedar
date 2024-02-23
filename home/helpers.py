@@ -4,7 +4,7 @@ from datetime import date
 from string import ascii_letters, punctuation
 
 import requests
-from dhivehi_nlp import dictionary
+from dhivehi_nlp import dictionary, stemmer
 from dhivehi_nlp._helpers import _db_connect
 
 from home.models import SearchResponse, Word, Meaning, Webpage
@@ -177,3 +177,14 @@ def process_meaning(word, meaning):
             page.words.add(word_obj)
 
     return True
+
+
+def preprocess_word(word):
+    word = word.lower()
+    word = remove_punctuation(word)
+    word = stemmer.stem(word)
+
+    if type(word) == list:
+        word = word[0]
+
+    return word

@@ -1,21 +1,13 @@
-import json
-import os
-from string import ascii_letters, digits, punctuation
-
+from dhivehi_nlp import dictionary
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
-from dotenv import load_dotenv
 
-from home.helpers import is_dhivehi_word, remove_punctuation, google_custom_search, get_related_words, \
-    process_related_words, process_meaning
-from home.models import Word, Meaning, SearchResponse, Webpage
+from home.helpers import is_dhivehi_word, remove_punctuation, process_related_words, process_meaning, preprocess_word
+from home.models import Word, Webpage
 from mysite.settings.base import SITE_VERSION
-from dhivehi_nlp import dictionary, stemmer, tokenizer
 
 
-# 30 days cache, example using site version to invalidate cache (increment to
-# invalidate)
 @cache_page(60 * 60 * 24 * 30,
             key_prefix=SITE_VERSION)
 def home(request):
@@ -38,25 +30,19 @@ def search_english(request):
         return HttpResponse('This is not a dhivehi word')
 
 
+
+
+
 @cache_page(60 * 60 * 24 * 30,
             key_prefix=SITE_VERSION)
 def explore_word(request, word):
-    page_title = "Dhivehi Radheef for " + word + " | Radheefu.com"
-
     if not word:
         return HttpResponse('Please enter a word')
 
     if not is_dhivehi_word(word):
         return HttpResponse('This is not a dhivehi word')
 
-    word = word.lower()
-    word = remove_punctuation(word)
-    word = stemmer.stem(word)
-
-    if type(word) == list:
-        word = word[0]
-
-    meaning = dictionary.get_definition(word)
+    meaning = dictionary.get_definition(preprocess_word(word))
 
     # Meaning want found, therefore, lets find related words
     if not meaning:
@@ -66,7 +52,6 @@ def explore_word(request, word):
             'related_only': True,
             'word': word,
             'words': Word.objects.filter(related_words__word=word),
-            'p_title': page_title
         }
         return render(request, 'home/search_english.html', context)
 
@@ -74,7 +59,6 @@ def explore_word(request, word):
     else:
         process_meaning(word, meaning)
         context = {
-            'p_title': page_title,
             'words': Word.objects.filter(word=word),
             'search_result': Webpage.objects.filter(words__word=word)
         }
