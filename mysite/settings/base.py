@@ -22,6 +22,7 @@ SITE_NAME = "mysite"
 
 FIRST_PARTY_APPS = [
     "home",
+    "pwa",
 ]
 
 THIRD_PARTY_APPS = [
