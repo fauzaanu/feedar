@@ -1,3 +1,4 @@
+import json
 import os
 from string import ascii_letters, digits, punctuation
 
@@ -131,6 +132,10 @@ def explore_word(request, word):
 
             search_result = google_custom_search(word)
             search_result = search_result.response
+
+            # search result has a { } json object
+            search_result = json.loads(search_result)
+
 
             for item in search_result['items']:
                 link = item['link']

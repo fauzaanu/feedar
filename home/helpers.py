@@ -1,3 +1,4 @@
+import json
 import os
 from string import ascii_letters, punctuation
 
@@ -68,5 +69,6 @@ def google_custom_search(word):
         'exactTerms': word
     }
     response = requests.get(url, params=params)
-    search_results = SearchResponse.objects.create(word=word_obj, response=response.json())
+    response_json = json.dumps(response.json())
+    search_results = SearchResponse.objects.create(word=word_obj, response=response_json)
     return search_results

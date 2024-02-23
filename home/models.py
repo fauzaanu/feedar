@@ -38,7 +38,7 @@ class Webpage(models.Model):
 
 class SearchResponse(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
-    response = models.JSONField()
+    response = models.TextField()
 
     def __str__(self):
         return f"{self.word} - {self.webpage} - {self.count}"
