@@ -28,6 +28,7 @@ FIRST_PARTY_APPS = [
 THIRD_PARTY_APPS = [
     # "cloudinary_storage",
     # "cloudinary",
+    "huey.contrib.djhuey",
 ]
 
 DJANGO_APPS = [
