@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 from dotenv import load_dotenv
 
-from home.helpers import is_dhivehi_word, remove_punctuation, google_custom_search
+from home.helpers import is_dhivehi_word, remove_punctuation, google_custom_search, get_related_words
 from home.models import Word, Meaning, SearchResponse, Webpage
 from mysite.settings.base import SITE_VERSION
 from dhivehi_nlp import dictionary, stemmer, tokenizer
@@ -54,7 +54,7 @@ def explore_word(request, word):
         meaning = dictionary.get_definition(word)
 
         if not meaning:
-            related_words = dictionary.get_related_words(filter=word)
+            related_words = get_related_words(filter=word)
 
             if related_words:
 
