@@ -9,16 +9,19 @@
 
 ## TODO
 
+### Now
 - [x] How to find the root word: (ge, men, remover?)
-- [ ] connect to radheef.mv db too (some words are missing)
-- [ ] Add google translate
 - [x] Caching
-- [ ] redis setup
-- [ ] get ready to deploy
+- [x] redis setup
+- [x] get ready to deploy
 - [ ] rename home to radeef (migrations..)
 - [ ] PWA
-- [ ] utilize google free limits as much as possible (Que words, track usage)
+- [x] utilize google free limits as much as possible
 - [ ] somewhere a definition is getting added as a word, find it.
+
+### Later
+- [ ] connect to radheef.mv db too (some words are missing)
+- [ ] Add google translate
 
 ## Credits
 
