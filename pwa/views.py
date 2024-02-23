@@ -1,10 +1,15 @@
+import os
+
 from django.http import HttpResponse
 from django.shortcuts import render
 
 from mysite.settings.base import BASE_DIR
 
-PWA_SERVICE_WORKER_PATH = BASE_DIR + "/pwa/static/pwa/serviceworker.js"
-PWA_MANIFEST_PATH = BASE_DIR + "/pwa/static/pwa/app.webmanifest"
+# PWA_SERVICE_WORKER_PATH = BASE_DIR + "/pwa/static/pwa/serviceworker.js"
+# PWA_MANIFEST_PATH = BASE_DIR + "/pwa/static/pwa/app.webmanifest"
+
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, "pwa", "static", "pwa", "serviceworker.js")
+PWA_MANIFEST_PATH = os.path.join(BASE_DIR, "pwa", "static", "pwa", "app.webmanifest")
 
 
 def service_worker(request):
