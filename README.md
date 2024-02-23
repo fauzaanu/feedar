@@ -18,6 +18,7 @@
 - [ ] rename home to radeef (migrations..)
 - [ ] PWA
 - [ ] utilize google free limits as much as possible (Que words, track usage)
+- [ ] somewhere a definition is getting added as a word, find it.
 
 ## Credits
 
