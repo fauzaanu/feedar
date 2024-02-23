@@ -3,7 +3,7 @@ from .base import *
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "https://radheefu.com/",
+    "radheefu.com",
 ]
 
 # SECURITY WARNING: keep the secret key used in production secret!
