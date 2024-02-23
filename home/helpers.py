@@ -3,6 +3,7 @@ import os
 from string import ascii_letters, punctuation
 
 import requests
+from dhivehi_nlp._helpers import _db_connect
 
 from home.models import SearchResponse, Word
 
@@ -72,3 +73,19 @@ def google_custom_search(word):
     response_json = json.dumps(response.json())
     search_results = SearchResponse.objects.create(word=word_obj, response=response_json)
     return search_results
+
+
+def get_related_words(filter=None):
+    """
+    Searches the definitions for the filter and returns a list of related words.
+    """
+    con = _db_connect()
+    cursor = con.cursor()
+
+    if filter:
+        query = f"SELECT word FROM radheef WHERE definition LIKE '%{filter}%'"
+    else:
+        query = "SELECT word FROM radheef"
+    cursor.execute(query)
+    words = [word[0] for word in cursor.fetchall()]
+    return words
