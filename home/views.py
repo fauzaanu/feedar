@@ -7,7 +7,8 @@ from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 from dotenv import load_dotenv
 
-from home.helpers import is_dhivehi_word, remove_punctuation, google_custom_search, get_related_words
+from home.helpers import is_dhivehi_word, remove_punctuation, google_custom_search, get_related_words, \
+    process_related_words, process_meaning
 from home.models import Word, Meaning, SearchResponse, Webpage
 from mysite.settings.base import SITE_VERSION
 from dhivehi_nlp import dictionary, stemmer, tokenizer
@@ -45,100 +46,36 @@ def explore_word(request, word):
     if not word:
         return HttpResponse('Please enter a word')
 
-    if is_dhivehi_word(word):
-        word = word.lower()
-        word = remove_punctuation(word)
-        word = stemmer.stem(word)
+    if not is_dhivehi_word(word):
+        return HttpResponse('This is not a dhivehi word')
 
-        if type(word) == list:
-            word = word[0]
+    word = word.lower()
+    word = remove_punctuation(word)
+    word = stemmer.stem(word)
 
-        meaning = dictionary.get_definition(word)
+    if type(word) == list:
+        word = word[0]
 
-        if not meaning:
-            related_words = get_related_words(filter=word)
+    meaning = dictionary.get_definition(word)
 
-            if related_words:
+    # Meaning want found, therefore, lets find related words
+    if not meaning:
+        process_related_words(word)
 
-                q_word, _ = Word.objects.get_or_create(word=word)
+        context = {
+            'related_only': True,
+            'word': word,
+            'words': Word.objects.filter(related_words__word=word),
+            'p_title': page_title
+        }
+        return render(request, 'home/search_english.html', context)
 
-                for rel_word in related_words:
-                    rel_word = remove_punctuation(rel_word)
-                    if rel_word:
-                        meaning = dictionary.get_definition(rel_word)
-                        if meaning:
-                            word_obj, _ = Word.objects.get_or_create(word=rel_word)
-                            q_word.related_words.add(word_obj)
-                            for mean in meaning:
-                                mean = remove_punctuation(mean)
-                                if mean:
-                                    Meaning.objects.get_or_create(meaning=mean, word=word_obj)
-
-                context = {
-                    'related_only': True,
-                    'word': word,
-                    'words': Word.objects.filter(related_words__word=word),
-                    'p_title': page_title
-                }
-                return render(request, 'home/search_english.html', context)
-
-        else:
-            word_obj, _ = Word.objects.get_or_create(word=word)
-
-            for mean in meaning:
-                mean = remove_punctuation(mean)
-                if mean:
-                    Meaning.objects.get_or_create(meaning=mean, word=word_obj)
-
-            word_length = len(word)
-            for i in range(word_length):
-                wrd = word[:word_length - i]
-                meaning = dictionary.get_definition(wrd)
-                if meaning:
-                    related_word, _ = Word.objects.get_or_create(word=wrd)
-                    word_obj.related_words.add(related_word)
-                    word_obj.save()
-
-                    for meaning_item in meaning:
-                        meaning_item = remove_punctuation(meaning_item)
-                        if meaning_item:
-                            Meaning.objects.get_or_create(meaning=meaning_item, word=related_word)
-
-            search_result = google_custom_search(word)
-            if search_result:
-                search_result = search_result.response
-
-                # search result has a { } json object
-                search_result = json.loads(search_result)
-
-                for item in search_result['items']:
-                    link = item['link']
-                    title = item['title']
-
-                    # find a .jpg or .png image from the item string
-                    item_str = str(item)
-                    image_link = None
-                    begins_with = ['http://', 'https://']
-                    ends_with = ['.jpg', '.png', '.jpeg', '.webp']
-
-                    # find the first image in the item string
-                    for image_end in ends_with:
-                        imgage = item_str.find(image_end)
-                        if imgage != -1:
-                            # find the first http or https before the image
-                            for start in begins_with:
-                                start_index = item_str.rfind(start, 0, imgage)
-                                if start_index != -1:
-                                    image_link = item_str[start_index:imgage + len(image_end)]
-                                    break
-
-                    image_link = image_link if image_link else None
-                    page, _ = Webpage.objects.get_or_create(url=link, title=title, image_link=image_link)
-                    page.words.add(word_obj)
-
-                context = {
-                    'p_title': page_title,
-                    'words': Word.objects.filter(word=word),
-                    'search_result': Webpage.objects.filter(words__word=word)
-                }
-                return render(request, 'home/search_english.html', context)
+    # Meaning was found, lets process it
+    else:
+        process_meaning(word, meaning)
+        context = {
+            'p_title': page_title,
+            'words': Word.objects.filter(word=word),
+            'search_result': Webpage.objects.filter(words__word=word)
+        }
+        return render(request, 'home/search_english.html', context)
