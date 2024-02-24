@@ -187,6 +187,11 @@ def extract_text_from_html(url):
     # good for postgresql
     text = text.encode('utf-8').decode('utf-8')
 
+    # remove english words
+    for word in text.split():
+        if not is_dhivehi_word(word):
+            text = text.replace(word, '')
+
     return text
 
 def find_sentence_with_word(text, word):
