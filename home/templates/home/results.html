@@ -58,23 +58,23 @@
                             <h2 class="text-2xl  mb-2 font-sangu">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
                             <div class="flex flex-col gap-2 text-primary">
                                 {% for result in search_result %}
-                                    <div dir="rtl"
-                                         onclick="location.href='{{ result.url }}'"
-                                         class="flex flex-col font-mono align-middle justify-center text-right rounded p-5 gap-2 cursor-pointer bg-dv_white "
-                                    >
+                                    {% if result.text_section %}
+                                        <div dir="rtl"
+                                             onclick="location.href='{{ result.url }}'"
+                                             class="flex flex-col font-mono align-middle justify-center text-right rounded p-5 gap-2 cursor-pointer bg-dv_white "
+                                        >
 
-                                        <p class="web-results">
-                                            {{ result.text_section }}
-                                        </p>
+                                            <p class="web-results">
+                                                {{ result.text_section }}
+                                            </p>
 
-                                        <div class="flex text-sm bg-dv_white rounded w-fit px-5 py-1 shadow underline border-b-2 border-b-dv_red">
+                                            <div class="flex text-sm bg-dv_white rounded w-fit px-5 py-1 shadow underline border-b-2 border-b-dv_red">
 
-                                            {% include 'icons/link-2.svg' with size=10 %}
-
-
-                                            {{ result.get_domain }}
+                                                {% include 'icons/link-2.svg' with size=10 %}
+                                                {{ result.get_domain }}
+                                            </div>
                                         </div>
-                                    </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>

@@ -61,6 +61,10 @@ def get_radheef_val(word):
 def google_custom_search(word):
     word_obj, _ = Word.objects.get_or_create(word=word)
 
+    # do we have Webpage objects for this word?
+    if Webpage.objects.filter(words__word=word).exists():
+        return None
+
     # check if our daily limit is above 100
     current_requests = SearchResponse.objects.filter(date=date.today()).count()
     print(current_requests)
@@ -83,25 +87,27 @@ def google_custom_search(word):
         url = item['link']
         page, _ = Webpage.objects.get_or_create(url=url)
         page.words.add(word_obj)
+
+
         page.text_content = extract_text_from_html(url)
+
         sentence = find_sentence_with_word(page.text_content, word)
         if sentence:
-            page.text_section = sentence
-        page.save()
+            if not str(sentence).isspace():
+                page.text_section = sentence
+                page.save()
+
     return True
 
 
-def get_related_words(filter=None):
+def get_related_words(filter: str):
     """
     Searches the definitions for the filter and returns a list of related words.
     """
     con = _db_connect()
     cursor = con.cursor()
 
-    if filter:
-        query = f"SELECT word FROM radheef WHERE definition LIKE '%{filter}%'"
-    else:
-        query = "SELECT word FROM radheef"
+    query = f"SELECT word FROM radheef WHERE definition LIKE '%{filter}%'"
     cursor.execute(query)
     words = [word[0] for word in cursor.fetchall()]
     return words
@@ -114,17 +120,6 @@ def process_related_words(word):
     related_words = get_related_words(filter=word)
     if related_words:
         q_word, _ = Word.objects.get_or_create(word=word)
-        for rel_word in related_words:
-            rel_word = remove_punctuation(rel_word)
-            if rel_word:
-                meaning = dictionary.get_definition(rel_word)
-                if meaning:
-                    word_obj, _ = Word.objects.get_or_create(word=rel_word)
-                    q_word.related_words.add(word_obj)
-                    for mean in meaning:
-                        mean = remove_punctuation(mean)
-                        if mean:
-                            Meaning.objects.get_or_create(meaning=mean, word=word_obj)
 
     return True
 
@@ -180,14 +175,19 @@ def extract_text_from_html(url):
     # Get all text
     text = soup.get_text()
 
-    # ensure that the text does not have bad characters
-    # good for postgresql
-    text = text.encode('utf-8').decode('utf-8')
-
     # remove english words
     for word in text.split():
-        if not is_dhivehi_word(word):
-            text = text.replace(word, '')
+        for letter in word:
+            if letter in ascii_letters:
+                text = text.replace(word, '')
+            if letter in punctuation:
+                text = text.replace(word, '')
+            if letter not in [chr(i) for i in range(1920, 1970)]:
+                text = text.replace(word, '')
+
+    text = text.strip()
+
+    text = text.encode('utf-8').decode('utf-8')
 
     return text
 
@@ -197,21 +197,8 @@ def find_sentence_with_word(text, word):
     # print(sentences)
     for sentence in sentences:
         if word in sentence:
-
-            # remove english words
-            for word in sentence.split():
-                for letter in word:
-                    if letter in ascii_letters:
-                        sentence = sentence.replace(word, '')
-
-            # shorten the sentence by stripping if too long
-            word_length = len(word)
-
-            if len(sentence) > 20 * word_length:
-                # find the position of the word
-                position = sentence.find(word)
-                # add 10 * word_length to the position and subtract 10 * word_length from the position
-                sentence = sentence[position - 10 * word_length:position + 10 * word_length]
-            return sentence
+            # is the word in the sentence?
+            if word in sentence:
+                return sentence
 
     return None
