@@ -6,7 +6,9 @@ from bs4 import BeautifulSoup
 from dhivehi_nlp import dictionary
 from huey.contrib.djhuey import task
 
-from home.helpers import preprocess_word, process_meaning, find_sentence_with_word
+from home.helpers.dhivehi_nlp_ext import process_meaning
+from home.helpers.formatting import preprocess_word
+from home.helpers.search_process import find_sentence_with_word
 from home.models import Word, Meaning, Webpage
 
 
