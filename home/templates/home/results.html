@@ -63,7 +63,10 @@
                                          class="flex flex-col font-mono align-middle justify-center text-right rounded p-5 gap-2 cursor-pointer bg-dv_white "
                                     >
 
-                                        {{ result.text_section }}
+                                        <p class="web-results">
+                                            {{ result.text_section }}
+                                        </p>
+
                                         <div class="flex text-sm bg-dv_white rounded w-fit px-5 py-1 shadow underline border-b-2 border-b-dv_red">
 
                                             {% include 'icons/link-2.svg' with size=10 %}
@@ -107,6 +110,29 @@
             meaning.innerHTML = newMeaning;
             meaning.classList.add('p-2', 'leading-loose');
         });
+
+
+        // find the main word from .web-results and place a border around it after adding a span around it
+        var webResults = document.querySelectorAll('.web-results');
+        const main_word = '{{ word }}';
+        webResults.forEach(function (webResult) {
+            var words = webResult.textContent.split(' ');
+            var newResult = '';
+            words.forEach(function (word) {
+                console.log(word);
+                if (word === '' || word === ' ' || !isNaN(word)) {
+                    return;
+                }
+                if (word === main_word) {
+                    newResult += '<span class="text-dv_white px-2 bg-primary rounded">' + word + '</span> ';
+                } else {
+                    newResult += word + ' ';
+                }
+            });
+            webResult.innerHTML = newResult;
+        });
+
+
     </script>
 
 {% endblock %}

@@ -82,6 +82,7 @@ def explore_word(request, word):
                 # try to find the word in the text content
 
         context = {
+            'word': word,
             'words': Word.objects.filter(word=word),
             'search_result': Webpage.objects.filter(words__word=word, text_section__isnull=False),
         }
