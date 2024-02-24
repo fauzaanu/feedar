@@ -32,39 +32,25 @@
 
 
                         {% for meaning in word.meanings.all %}
-                            <p class="leading-loose meanings flex gap-2 flex-wrap my-2">{{ meaning }}</p>
+                            <p class="leading-loose meanings flex gap-2 flex-wrap my-7">{{ meaning }}</p>
                         {% endfor %}
                     {% endfor %}
                 {% endif %}
 
-                {% if search_result %}
-                    <div dir="rtl" class="flex flex-col my-10">
-                        <div>
-                            <h2 class="text-3xl  mb-2 font-faruma">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
-                            <div class="flex flex-col gap-2 text-primary">
-                                {% for result in search_result %}
-                                    {% if result.text_section %}
-                                        <div dir="rtl"
-                                             onclick="location.href='{{ result.url }}'"
-                                             class="flex flex-col font-mono align-middle justify-center text-right rounded p-5 gap-2 cursor-pointer bg-dv_white "
-                                        >
 
-                                            <p class="web-results text-2xl">
-                                                {{ result.text_section }}
-                                            </p>
-
-                                            <div class="flex text-sm bg-dv_white rounded w-fit px-5 py-1 shadow underline border-b-2 border-b-dv_red">
-
-                                                {% include 'icons/link-2.svg' with size=10 %}
-                                                {{ result.get_domain }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
+                <div dir="rtl" class="flex flex-col my-10 text-center text-3xl" hx-trigger="every 3s"
+                     hx-get="/hx/{{ word }}/{{ session_key }}" hx-swap="outerHTML">
+                    {#                       {% include 'home/hx_comps/on_the_web.html' %}#}
+                    <div class="flex flex-wrap gap-5 animate-pulse">
+                        {% include 'icons/sparkle.svg' %}
+                        ބަހުގެ މިސާލުކޮޅެއް ވިކިޕީޑިޔާއިން އެބަ ހޯދާލަން . .
                     </div>
-                {% endif %}
+
+
+                </div>
+
+                <p class="decoration-dv_red"></p>
+
 
                 {% include 'home/search_form.html' %}
             </div>
@@ -78,43 +64,62 @@
         // for every word inside of .meanings make it a url with the word
         // if the word is nurse it should be /explore/nurse
         // use vanilla js
-        var meanings = document.querySelectorAll('.meanings');
-        meanings.forEach(function (meaning) {
-            // split the meaning into words
-            var words = meaning.textContent.split(' ');
-            var newMeaning = '';
-            words.forEach(function (word) {
-
-                // if the word is empty skip it or if its a space or if its a number
-                if (word === '' || word === ' ' || !isNaN(word)) {
-                    return;
+        const meanings = document.querySelectorAll('.meanings');
+        console.log(meanings);
+        meanings.forEach(meaning => {
+            console.log(meaning.innerHTML);
+            const words = meaning.innerHTML.split(' ');
+            console.log(words);
+            let new_meaning = '';
+            for (const word of words) {
+                if (word === '') {
+                    continue;
                 }
 
-                newMeaning += '<a href="/explore/' + word + '" class="text-primary leading-loose p-2 rounded bg-white border-b-2 border-dv_green">' + word + '</a> ';
-            });
-            meaning.innerHTML = newMeaning;
-            meaning.classList.add('p-2', 'leading-loose');
+                // if a number or punctuation
+                if (word.match(/^[0-9]+$/) || word.match(/^[.,:;!?]+$/)) {
+                    continue;
+                }
+
+                let classText = "hover:text-dv_green text-2xl decoration-dv_red/30 underline cursor-pointer";
+                new_meaning += `<a href="/explore/${word}" class="${classText}">${word}</a>`;
+            }
+            meaning.innerHTML = new_meaning;
+
         });
 
 
-        // find the main word from .web-results and place a border around it after adding a span around it
-        var webResults = document.querySelectorAll('.web-results');
-        const main_word = '{{ word }}';
-        webResults.forEach(function (webResult) {
-            var words = webResult.textContent.split(' ');
-            var newResult = '';
-            words.forEach(function (word) {
-                console.log(word);
-                if (word === '' || word === ' ' || !isNaN(word)) {
-                    return;
+        // whenever htmx swaps the content, we need to find the word from the .web-results class and mark it with green color
+        document.body.addEventListener('htmx:afterSwap', function (event) {
+            const text_sections = document.querySelectorAll('.web-results'); // Use querySelectorAll to select all elements
+            const mainWord = "{{ word }}";
+
+            text_sections.forEach(section => {
+                const words = section.innerHTML.split(' ');
+                let new_text = '';
+
+                for (const word of words) {
+                    
+                    // if the word is just 1 character
+                    if (word.length === 1) {
+                        continue;
+                    }
+                    
+                    
+                    // if the word has odd number of characters
+                    if (word.length % 2 !== 0) {
+                        continue;
+                    }
+
+                    if (word === mainWord) {
+                        new_text += `<span class="text-dv_green">${word}</span>` + ' ';
+                    } else {
+                        new_text += word + ' ';
+                    }
                 }
-                if (word === main_word) {
-                    newResult += '<span class="text-dv_white px-2 py-2 bg-primary rounded leading-loose">' + word + '</span> ';
-                } else {
-                    newResult += word + ' ';
-                }
+
+                section.innerHTML = new_text;
             });
-            webResult.innerHTML = newResult + ". . . ";
         });
 
 

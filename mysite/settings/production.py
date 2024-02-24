@@ -1,3 +1,5 @@
+from gunicorn import workers
+
 from .base import *
 
 DEBUG = False
@@ -70,3 +72,4 @@ from redis import ConnectionPool
 
 pool = ConnectionPool()
 HUEY = RedisHuey(SITE_NAME, connection_pool=pool.from_url(REDIS_URL))
+

@@ -2,12 +2,13 @@ import json
 import os
 from datetime import date
 from string import ascii_letters, punctuation
-from bs4 import BeautifulSoup
+
 import requests
 from dhivehi_nlp import dictionary, stemmer
 from dhivehi_nlp._helpers import _db_connect
 
 from home.models import SearchResponse, Word, Meaning, Webpage
+
 
 
 def is_dhivehi_word(word: str):
@@ -78,7 +79,10 @@ def google_custom_search(word):
                             text = text.replace(word, '')
 
                 if text.isspace():
-                    page.delete()
+                    page.status = 'failed'
+                    page.save()
+                    return None
+
                 page.text_section = text
                 page.save()
         return None
@@ -98,21 +102,19 @@ def google_custom_search(word):
     }
     response = requests.get(url, params=params)
     response_json = json.dumps(response.json())
+    with open('google_search_response.json', 'w') as f:
+        f.write(response_json)
+
+    search = SearchResponse.objects.create(word=word_obj)
 
     # get all the links from the response
     items = response.json()['items']
-    for item in items:
-        url = item['link']
-        page, _ = Webpage.objects.get_or_create(url=url)
-        page.words.add(word_obj)
+    urls = [item['link'] for item in items]
 
-        page.text_content = extract_text_from_html(url)
-
-        sentence = find_sentence_with_word(page.text_content, word)
-        if sentence:
-            if not str(sentence).isspace():
-                page.text_section = sentence
-                page.save()
+    for url in urls:
+        search.link.add(Webpage.objects.get_or_create(url=url)[0])
+        from home.tasks import process_weblink
+        process_weblink(url, word)
 
     return True
 
@@ -169,8 +171,6 @@ def process_meaning(word, meaning):
                 if meaning_item:
                     Meaning.objects.get_or_create(meaning=meaning_item, word=related_word)
 
-    # get the search result
-    google_custom_search(word)
     return True
 
 
@@ -185,37 +185,9 @@ def preprocess_word(word):
     return word
 
 
-def extract_text_from_html(url):
-    response = requests.get(url)
-    html_content = response.content
-
-    soup = BeautifulSoup(html_content, 'html.parser', from_encoding="utf-8")
-
-    # Remove script tags
-    for script in soup(['script', 'style']):
-        script.extract()
-
-    # Get all text
-    text = soup.get_text()
-
-    # remove english words
-    for word in text.split():
-        for letter in word:
-            if letter in ascii_letters:
-                text = text.replace(word, '')
-            if letter in punctuation:
-                text = text.replace(word, '')
-            if letter not in [chr(i) for i in range(1920, 1970)]:
-                text = text.replace(word, '')
-
-    text = text.strip()
-
-    return text
-
-
 def find_sentence_with_word(text, word):
     # split into chucks of 500 words
-    chunks = [text[i:i + 500] for i in range(0, len(text), 500)]
+    chunks = [text[i:i + 250] for i in range(0, len(text), 250)]
     sentences = [chunk for chunk in chunks if word in chunk]
 
     for sentence in sentences:

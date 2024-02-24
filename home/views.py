@@ -1,10 +1,13 @@
+import random
+
 from dhivehi_nlp import dictionary
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 
-from home.helpers import is_dhivehi_word, remove_punctuation, process_related_words, process_meaning, preprocess_word
-from home.models import Word, Webpage, Meaning
+from home.helpers import is_dhivehi_word, remove_punctuation, process_related_words, process_meaning, preprocess_word, \
+    google_custom_search
+from home.models import Word, Webpage, Meaning, SearchResponse
 from home.tasks import make_db
 from mysite.settings.base import SITE_VERSION
 
@@ -15,7 +18,6 @@ def home(request):
     # Webpage.objects.all().delete()
     # Word.objects.all().delete()
     # Meaning.objects.all().delete()
-
 
     # NEED TO LOAD THE DATABASE TO POSTGRES TO SPEEDUP
     make_db()
@@ -56,8 +58,6 @@ def on_demand_english_removal(word):
     return True
 
 
-@cache_page(60 * 60 * 24 * 30,
-            key_prefix=SITE_VERSION)
 def explore_word(request, word):
     if not word:
         return HttpResponse('Please enter a word')
@@ -83,9 +83,101 @@ def explore_word(request, word):
         process_meaning(word, meaning)
         on_demand_english_removal(word)
 
+        if request.session.get('session_key'):
+            del request.session['session_key']
+        session_key = random.randint(100000, 999999)
+        request.session['session_key'] = session_key
+
+        # process the google search
+        google_custom_search(word)
+
+        # # check and remove all Webpages with not dhivehi text
+        # pages = Webpage.objects.filter(words__word=word, status='success')
+        # for page in pages:
+        #     text = page.text_section
+        #     if page.text_section:
+        #         for word in text.split():
+        #             for letter in word:
+        #                 if letter not in [chr(i) for i in range(1920, 1970)]:
+        #                     text = text.replace(word, '')
+        #
+        #         if text.strip() == '':
+        #             page.status = 'failed'
+        #             page.save()
+        #         else:
+        #             page.text_section = text
+        #             page.save()
+
         context = {
+            "session_key": session_key,
             'word': word,
             'words': Word.objects.filter(word=word),
-            'search_result': Webpage.objects.filter(words__word=word, text_section__isnull=False),
+            # 'search_result': Webpage.objects.filter(words__word=word, text_section__isnull=False),
         }
         return render(request, 'home/results.html', context)
+
+
+def hx_load_web_data(request, word, session_key):
+    # /hx/{{ word }}_{{ session_key }}
+    server_session_key = request.session.get('session_key')
+    server_session_key = int(server_session_key)
+    client_session_key = int(session_key)
+
+    print(f"Server Session key", server_session_key)
+    print(f"Client Session key", session_key)
+    print("Amount of pages", Webpage.objects.filter(words__word=word).count())
+    if not session_key:
+        return HttpResponse('not')
+
+    # check and remove all Webpages with not dhivehi text
+    # pages = Webpage.objects.filter(words__word=word, status='success')
+    # for page in pages:
+    #     text = page.text_section
+    #     if page.text_section:
+    #         for word in text.split():
+    #             for letter in word:
+    #                 if letter not in [chr(i) for i in range(1920, 1970)]:
+    #                     text = text.replace(word, '')
+    #
+    #         if text.strip() == '':
+    #             page.status = 'failed'
+    #             page.save()
+    #         else:
+    #             page.text_section = text
+    #             page.save()
+
+    word = remove_punctuation(word)
+    if not is_dhivehi_word(word):
+        return HttpResponse('This is not a dhivehi word')
+
+    if server_session_key != client_session_key:
+        return HttpResponse('Invalid session key')
+
+    success = Webpage.objects.filter(words__word=word, status='success').count()
+    failed = Webpage.objects.filter(words__word=word, status='failed').count()
+    rest = Webpage.objects.filter(words__word=word).count()
+    amount_of_results = success + failed
+
+    print(success, failed, amount_of_results, rest)
+
+    search = SearchResponse.objects.get(word=Word.objects.get(word=word))
+
+    if amount_of_results >= search.link.count():
+        return render(
+            request,
+            'home/hx_comps/final.html',
+            {
+                'word': word,
+                'search_result': Webpage.objects.filter(words__word=word),
+            }
+        )
+
+    return render(
+        request,
+        'home/hx_comps/on_the_web.html',
+        {
+            'word': word,
+            'session_key': server_session_key,
+            'search_result': Webpage.objects.filter(words__word=word),
+        }
+    )

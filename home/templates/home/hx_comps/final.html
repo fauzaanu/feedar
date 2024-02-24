@@ -1,0 +1,23 @@
+<div dir="rtl" class="flex flex-col my-10">
+    <div>
+        <h2 class="text-3xl text-dv_green mb-2 font-faruma">
+            ދިވެހި ވިކިޕީޑިޔާގައި މިބަސް
+        </h2>
+        <div class="flex flex-col gap-2 text-dv_white">
+            {% for result in search_result %}
+                {% if result.text_section %}
+                    <div dir="rtl"
+                         onclick="location.href='{{ result.url }}'"
+                         class="flex flex-col font-mono align-middle justify-center text-right rounded p-5 gap-2 cursor-pointer "
+                    >
+
+                        <p class="web-results text-2xl pb-5 border-b-2 border-dv_red">
+                            {{ result.text_section }}
+                        </p>
+
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

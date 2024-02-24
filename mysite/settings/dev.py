@@ -36,3 +36,15 @@ try:
     from .local import *
 except ImportError:
     pass
+
+
+REDIS_URL = "redis://localhost:6379/"
+
+from huey import RedisHuey
+from redis import ConnectionPool
+
+pool = ConnectionPool()
+HUEY = RedisHuey(SITE_NAME, connection_pool=pool.from_url(REDIS_URL))
+
+# Clear all tasks on start
+HUEY.flush()

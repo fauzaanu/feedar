@@ -28,6 +28,7 @@ class Webpage(models.Model):
     words = models.ManyToManyField(Word)
     text_content = models.TextField(blank=True, null=True)
     text_section = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=100, default='started')
 
     def __str__(self):
         return self.title
