@@ -216,3 +216,26 @@ def find_sentence_with_word(text, word):
         if word in sentence:
             return sentence
     return None
+
+
+def process_textual_content(request, word):
+    # process textual content
+    websites = Webpage.objects.filter(words__word=word)
+    for site in websites:
+        if site.text_section:
+            continue
+
+        if site.text_content:
+            sentence = find_sentence_with_word(site.text_content, word)
+            if sentence:
+                site.text_section = sentence
+                site.save()
+            else:
+                site.delete()
+                continue
+
+        if not site.text_content:
+            # get the text content from the website
+            text = extract_text_from_html(site.url)
+            site.text_content = text
+            site.save()

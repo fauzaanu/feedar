@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 
 from home.helpers import is_dhivehi_word, remove_punctuation, process_related_words, process_meaning, preprocess_word, \
-    extract_text_from_html, find_sentence_with_word
+    extract_text_from_html, find_sentence_with_word, process_textual_content
 from home.models import Word, Webpage
 from mysite.settings.base import SITE_VERSION
 
@@ -56,30 +56,7 @@ def explore_word(request, word):
     # Meaning was found, lets process it
     else:
         process_meaning(word, meaning)
-
-        # process textual content
-        websites = Webpage.objects.filter(words__word=word)
-        for site in websites:
-            if site.text_section:
-                continue
-
-            if site.text_content:
-                sentence = find_sentence_with_word(site.text_content, word)
-                if sentence:
-                    site.text_section = sentence
-                    site.save()
-                else:
-                    site.delete()
-                    continue
-
-            if not site.text_content:
-                # get the text content from the website
-                text = extract_text_from_html(site.url)
-                # print(text)
-                site.text_content = text
-                site.save()
-
-                # try to find the word in the text content
+        process_textual_content(request, word)
 
         context = {
             'word': word,
