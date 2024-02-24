@@ -11,9 +11,9 @@ from mysite.settings.base import SITE_VERSION
 @cache_page(60 * 60 * 24 * 30,
             key_prefix=SITE_VERSION)
 def home(request):
-    Webpage.objects.all().delete()
-    Word.objects.all().delete()
-    Meaning.objects.all().delete()
+    # Webpage.objects.all().delete()
+    # Word.objects.all().delete()
+    # Meaning.objects.all().delete()
 
     return render(request, 'home/home.html')
 
