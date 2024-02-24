@@ -1,14 +1,18 @@
 <footer class="">
     <div class="flex flex-col mx-auto items-center py-10 font-mono">
-        <p class="flex gap-2">
-            {% include 'icons/github.svg' %}
-            <a href="https://github.com/fauzaanu/feedar" class="href">github.com/fauzaanu/feedar</a>
-        </p>
+        <div style="position: fixed; bottom: 20px; left: 20px;">
+            <iframe
+                    src="https://static.store.app/widget/badge/index.html?sitePath=radheefu-com&theme=dark"
+                    style="width: 250px; height: 122px; border: none; border-radius: 12px;">
+            </iframe>
+        </div>
         <p class="text-black/30 flex flex-col">
         <div class="flex gap-2">
             {% include 'icons/voicemail.svg' %}
             <a class="underline"
-               href="https://t.me/fauzaanu">@fauzaanu</a>
+               href="https://t.me/fauzaanu">
+                Made by @fauzaanu
+            </a>
         </div>
         ©{% now "Y" %}
         </p>
