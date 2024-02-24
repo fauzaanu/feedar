@@ -3,12 +3,17 @@
 
 @font-face {
     font-family: "faruma";
-    src: url("Faruma.otf");
+    src: url("AK Rasmee.ttf");
 }
+
+/*@font-face {*/
+/*    font-family: "faruma";*/
+/*    src: url("Faruma.otf");*/
+/*}*/
 
 @font-face {
     font-family: "sangu";
-    src: url("Gurafiku-Regular.woff2");
+    src: url("AK Liyan Bold.ttf");
 }
 
 

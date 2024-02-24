@@ -21,6 +21,7 @@ python-dotenv = "^1.0.1"
 huey = "^2.5.0"
 dhivehi-nlp = "^1.0.13"
 requests = "^2.31.0"
+beautifulsoup4 = "^4.12.3"
 
 
 [build-system]

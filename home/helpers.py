@@ -188,3 +188,31 @@ def preprocess_word(word):
         word = word[0]
 
     return word
+
+
+from bs4 import BeautifulSoup
+
+
+def extract_text_from_html(url):
+
+    response = requests.get(url)
+    html_content = response.content
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    # Remove script tags
+    for script in soup(['script', 'style']):
+        script.extract()
+
+    # Get all text
+    text = soup.get_text()
+
+    return text
+
+def find_sentence_with_word(text, word):
+    sentences = text.split('.')
+    # print(sentences)
+    for sentence in sentences:
+        if word in sentence:
+            return sentence
+    return None

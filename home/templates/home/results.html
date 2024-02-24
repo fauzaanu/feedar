@@ -26,11 +26,10 @@
                                 {{ word }}
 
                             </h1>
-                            <div id="play-sound_{{ word }}" class="bg-dv_red p-2 rounded">
+                            <div id="play-sound_{{ word }}"
+                                 class="bg-dv_red p-2 rounded border-2 border-dotted border-dv_white">
                                 {% include 'icons/volume-1.svg' %}
                             </div>
-
-
                         </div>
 
                         <audio controls
@@ -56,14 +55,22 @@
                 {% if search_result %}
                     <div dir="rtl" class="flex flex-col py-10">
                         <div>
-                            <h2 class="text-5xl  mb-2 font-sangu">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
+                            <h2 class="text-2xl  mb-2 font-sangu">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
                             <div class="flex flex-col gap-2 text-primary">
                                 {% for result in search_result %}
-                                    <div onclick="location.href='{{ result.url }}'"
-                                         class="flex font-mono align-middle justify-center text-left rounded p-5 gap-2 underline cursor-pointer bg-dv_green "
+                                    <div dir="rtl"
+                                         onclick="location.href='{{ result.url }}'"
+                                         class="flex flex-col font-mono align-middle justify-center text-right rounded p-5 gap-2 cursor-pointer bg-dv_white "
                                     >
-                                        {{ result.get_domain }}
-                                        {% include 'icons/globe.svg' %}
+
+                                        {{ result.text_section }}
+                                        <div class="flex text-sm bg-dv_white rounded w-fit px-5 py-1 shadow underline border-b-2 border-b-dv_red">
+
+                                            {% include 'icons/link-2.svg' with size=10 %}
+
+
+                                            {{ result.get_domain }}
+                                        </div>
                                     </div>
                                 {% endfor %}
                             </div>
@@ -95,7 +102,7 @@
                     return;
                 }
 
-                newMeaning += '<a href="/explore/' + word + '" class="text-primary underline leading-loose p-2 rounded bg-white border-b-2 border-dv_green">' + word + '</a> ';
+                newMeaning += '<a href="/explore/' + word + '" class="text-primary leading-loose p-2 rounded bg-white border-b-2 border-dv_green">' + word + '</a> ';
             });
             meaning.innerHTML = newMeaning;
             meaning.classList.add('p-2', 'leading-loose');
