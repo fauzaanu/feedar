@@ -76,7 +76,7 @@ def explore_word(request, word):
             'word': word,
             'words': Word.objects.filter(related_words__word=word),
         }
-        return render(request, 'home/results.html', context)
+        return render(request, 'home/related.html', context)
 
     # Meaning was found, lets process it
     else:
