@@ -194,7 +194,6 @@ from bs4 import BeautifulSoup
 
 
 def extract_text_from_html(url):
-
     response = requests.get(url)
     html_content = response.content
 
@@ -208,6 +207,7 @@ def extract_text_from_html(url):
     text = soup.get_text()
 
     return text
+
 
 def find_sentence_with_word(text, word):
     sentences = text.split('.')
@@ -229,6 +229,11 @@ def process_textual_content(request, word):
             sentence = find_sentence_with_word(site.text_content, word)
             if sentence:
                 site.text_section = sentence
+
+                # ValueError: A string literal cannot contain NUL (0x00) characters.
+                # remove the null characters from the string
+                site.text_section = site.text_section.replace('\x00', '')
+
                 site.save()
             else:
                 site.delete()
