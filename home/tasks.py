@@ -1,9 +1,31 @@
 from datetime import date
-from huey import crontab
-from huey.contrib.djhuey import periodic_task
 
-from home.helpers import google_custom_search
-from home.models import SearchResponse, Word, IndexQueue
+from dhivehi_nlp import dictionary
+from huey import crontab
+from huey.contrib.djhuey import periodic_task, task
+
+from home.helpers import google_custom_search, preprocess_word, process_meaning
+from home.models import SearchResponse, Word, IndexQueue, Meaning
+
+
+@task()
+def make_db():
+    """
+    Make the database
+    """
+    words = dictionary.get_wordlist()
+    for word in words:
+        meaning = dictionary.get_definition(preprocess_word(word))
+        if meaning:
+            process_meaning(word, meaning)
+            word, _ = Word.objects.get_or_create(word=word)
+            meaning = str()
+            for meaning in meaning:
+                meaning += meaning + ', '
+
+            meaning, _ = Meaning.objects.get_or_create(meaning=meaning, word=word)
+
+
 
 
 # run every 15 minutes

@@ -5,6 +5,7 @@ from django.views.decorators.cache import cache_page
 
 from home.helpers import is_dhivehi_word, remove_punctuation, process_related_words, process_meaning, preprocess_word
 from home.models import Word, Webpage, Meaning
+from home.tasks import make_db
 from mysite.settings.base import SITE_VERSION
 
 
@@ -14,6 +15,10 @@ def home(request):
     # Webpage.objects.all().delete()
     # Word.objects.all().delete()
     # Meaning.objects.all().delete()
+
+
+    # NEED TO LOAD THE DATABASE TO POSTGRES TO SPEEDUP
+    make_db()
 
     return render(request, 'home/home.html')
 
