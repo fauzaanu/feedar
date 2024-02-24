@@ -19,9 +19,32 @@
 
                 {% if words %}
                     {% for word in words %}
-                        <h1 class="text-6xl mb-2 font-sangu">
-                            {{ word }}
-                        </h1>
+                        <div class="flex gap-2 items-center justify-between border-b-2 border-dv_green p-5 text-dv_white font-faruma"
+                             dir="rtl">
+
+                            <h1 class="flex text-6xl mb-2 font-sangu">
+                                {{ word }}
+                            </h1>
+
+                            <div id="play-sound_{{ word }}">
+                                {% include 'icons/volume-1.svg' %}
+                            </div>
+                        </div>
+                        
+                        <audio controls
+                               class="hidden"
+                               id="audio_{{ word }}"
+                               src="https://dhivehi.mv/tools/tts/data/?g=female&q={{ word }}"
+                        >
+                        </audio>
+                        
+                         <script>
+                            document.getElementById('play-sound_{{ word }}').addEventListener('click', function () {
+                                document.getElementById('audio_{{ word }}').play();
+                            });
+                        </script>
+
+
                         {% for meaning in word.meanings.all %}
                             <p class="leading-loose meanings flex gap-2 flex-wrap border-b border-dv_white">{{ meaning }}</p>
                         {% endfor %}

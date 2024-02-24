@@ -4,12 +4,14 @@
 
 - Every word in the definition is a click to search
 - Google Search API to get top 10 for the word
-- Words that dont have a definition, are reverse searched to get other words that include the word within the words definition
+- Words that dont have a definition, are reverse searched to get other words that include the word within the words
+  definition
 - add Adobe Stock for images
 
 ## TODO
 
 ### Now
+
 - [x] How to find the root word: (ge, men, remover?)
 - [x] Caching
 - [x] redis setup
@@ -20,11 +22,15 @@
 - [ ] somewhere a definition is getting added as a word, find it.
 
 ### Later
+
 - [ ] connect to radheef.mv db too (some words are missing)
 - [ ] Add google translate
 
 ## Credits
 
-These projects were used to build this project
+These projects were used to build this project, in various ways.
+
 - dhivehi-nlp (https://github.com/mismaah/dhivehi_nlp)
 - ThaanaKeyboard (https://github.com/aharen/thaana-keyboard)
+- radheef.mv API
+- dhivehi.mv API
