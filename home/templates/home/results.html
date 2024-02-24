@@ -4,11 +4,9 @@
     <div class="flex">
         <div class="w-full p-5">
             <div dir="rtl" class="flex flex-col rounded p-5">
-
-
                 {% if words %}
                     {% for word in words %}
-                        <div class="flex gap-2 items-center text-dv_white font-faruma rounded-lg"
+                        <div class="flex gap-5 items-center text-dv_white font-faruma rounded-lg"
                              dir="rtl">
                             <h1 class="flex text-6xl font-faruma my-10">
                                 {{ word }}
@@ -34,7 +32,7 @@
 
 
                         {% for meaning in word.meanings.all %}
-                            <p class="leading-loose meanings flex gap-2 flex-wrap my-10">{{ meaning }}</p>
+                            <p class="leading-loose meanings flex gap-2 flex-wrap my-2">{{ meaning }}</p>
                         {% endfor %}
                     {% endfor %}
                 {% endif %}
@@ -42,7 +40,7 @@
                 {% if search_result %}
                     <div dir="rtl" class="flex flex-col my-10">
                         <div>
-                            <h2 class="text-2xl  mb-2 font-sangu">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
+                            <h2 class="text-3xl  mb-2 font-faruma">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
                             <div class="flex flex-col gap-2 text-primary">
                                 {% for result in search_result %}
                                     {% if result.text_section %}
@@ -51,7 +49,7 @@
                                              class="flex flex-col font-mono align-middle justify-center text-right rounded p-5 gap-2 cursor-pointer bg-dv_white "
                                         >
 
-                                            <p class="web-results">
+                                            <p class="web-results text-2xl">
                                                 {{ result.text_section }}
                                             </p>
 
@@ -111,12 +109,12 @@
                     return;
                 }
                 if (word === main_word) {
-                    newResult += '<span class="text-dv_white px-2 bg-primary rounded">' + word + '</span> ';
+                    newResult += '<span class="text-dv_white px-2 py-2 bg-primary rounded leading-loose">' + word + '</span> ';
                 } else {
                     newResult += word + ' ';
                 }
             });
-            webResult.innerHTML = newResult;
+            webResult.innerHTML = newResult + ". . . ";
         });
 
 

@@ -189,7 +189,7 @@ def extract_text_from_html(url):
     response = requests.get(url)
     html_content = response.content
 
-    soup = BeautifulSoup(html_content, 'html.parser')
+    soup = BeautifulSoup(html_content, 'html.parser', from_encoding="utf-8")
 
     # Remove script tags
     for script in soup(['script', 'style']):
