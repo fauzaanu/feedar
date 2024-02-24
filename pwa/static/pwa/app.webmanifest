@@ -1,9 +1,9 @@
 {
     "name": "RADHEEFU",
     "short_name": "RADHEEFU",
-    "start_url": "./?utm_source=pwa",
+    "start_url": "/",
     "theme_color": "#000",
-    "scope": "./",
+    "scope": "/",
     "display": "standalone",
     "orientation":"portrait",
     "description": "A better Radheef, by @fauzaanu",

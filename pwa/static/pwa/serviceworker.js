@@ -1,6 +1,6 @@
 // v2
 
-const assets = ["/", "/main.css", "/icon-512.png", "/icon-1024.png", "/icon-maskable.png", "/sw-register.js"];
+const assets = ["/"];
 
 self.addEventListener("install", event => {
     event.waitUntil( //incase the assets dont get cached in 40 secs
