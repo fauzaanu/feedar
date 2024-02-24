@@ -19,26 +19,28 @@
 
                 {% if words %}
                     {% for word in words %}
-                        <div class="flex gap-2 items-center justify-between border-b-2 border-dv_green p-5 text-dv_white font-faruma"
+                        <div class="flex gap-2 items-center text-dv_white font-faruma rounded-lg"
                              dir="rtl">
 
-                            <h1 class="flex text-6xl mb-2 font-sangu">
+                            <h1 class="flex text-6xl font-sangu">
                                 {{ word }}
-                            </h1>
 
-                            <div id="play-sound_{{ word }}">
+                            </h1>
+                            <div id="play-sound_{{ word }}" class="bg-dv_red p-2 rounded">
                                 {% include 'icons/volume-1.svg' %}
                             </div>
+
+
                         </div>
-                        
+
                         <audio controls
                                class="hidden"
                                id="audio_{{ word }}"
                                src="https://dhivehi.mv/tools/tts/data/?g=female&q={{ word }}"
                         >
                         </audio>
-                        
-                         <script>
+
+                        <script>
                             document.getElementById('play-sound_{{ word }}').addEventListener('click', function () {
                                 document.getElementById('audio_{{ word }}').play();
                             });
