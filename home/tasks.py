@@ -1,3 +1,4 @@
+import logging
 from datetime import date
 
 from dhivehi_nlp import dictionary
@@ -13,6 +14,7 @@ def make_db():
     """
     Make the database
     """
+    logging.error("Huey started btw")
     words = dictionary.get_wordlist()
     for word in words:
         meaning = dictionary.get_definition(preprocess_word(word))
