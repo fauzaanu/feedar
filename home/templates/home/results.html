@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="flex">
+        <div class="w-full p-5">
+            <div dir="rtl" class="flex flex-col border-2 border-black rounded p-5">
+
+                {% if related_only %}
+                    <div class="flex border-y-4 border-dv_red bg-dv_white gap-2 text-primary p-5 text-lg font-faruma"
+                         dir="rtl">
+                        <div class="bg-dv_red text-dv_white px-5">{{ word }}</div>
+                        <div class="">
+                            މިބަހުގެ ސީދާ މާނަ ރަދީފުގައި ނެތުމުން،ތިރީގައި މި ހިމަނާލަނީ މި ބަސް މާނައިގައި އެކުލެވޭ
+                            އެހެން
+                            ބަސްތައް
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if words %}
+                    {% for word in words %}
+                        <h1 class="text-6xl mb-2 font-sangu">
+                            {{ word }}
+                        </h1>
+                        {% for meaning in word.meanings.all %}
+                            <p class="leading-loose meanings flex gap-2 flex-wrap border-b border-dv_white">{{ meaning }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if search_result %}
+                    <div dir="rtl" class="flex flex-col py-10">
+                        <div>
+                            <h2 class="text-5xl  mb-2 font-sangu">ބަސްބޭނުން ކުރެވިފައިވާ މަސްދަރުތައް</h2>
+                            <div class="flex flex-col gap-2 text-primary">
+                                {% for result in search_result %}
+                                    <div onclick="location.href='{{ result.url }}'"
+                                         class="flex font-mono align-middle justify-center text-left rounded p-5 gap-2 underline cursor-pointer bg-dv_green "
+                                    >
+                                        {{ result.get_domain }}
+                                        {% include 'icons/globe.svg' %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% include 'home/search_form.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block extra_js %}
+    <script>
+        // for every word inside of .meanings make it a url with the word
+        // if the word is nurse it should be /explore/nurse
+        // use vanilla js
+        var meanings = document.querySelectorAll('.meanings');
+        meanings.forEach(function (meaning) {
+            // split the meaning into words
+            var words = meaning.textContent.split(' ');
+            var newMeaning = '';
+            words.forEach(function (word) {
+
+                // if the word is empty skip it or if its a space or if its a number
+                if (word === '' || word === ' ' || !isNaN(word)) {
+                    return;
+                }
+
+                newMeaning += '<a href="/explore/' + word + '" class="text-primary underline leading-loose p-2 rounded bg-white border-b-2 border-dv_green">' + word + '</a> ';
+            });
+            meaning.innerHTML = newMeaning;
+            meaning.classList.add('p-2', 'leading-loose');
+        });
+    </script>
+
+{% endblock %}

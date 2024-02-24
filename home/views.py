@@ -30,9 +30,6 @@ def search_english(request):
         return HttpResponse('This is not a dhivehi word')
 
 
-
-
-
 @cache_page(60 * 60 * 24 * 30,
             key_prefix=SITE_VERSION)
 def explore_word(request, word):
@@ -53,7 +50,7 @@ def explore_word(request, word):
             'word': word,
             'words': Word.objects.filter(related_words__word=word),
         }
-        return render(request, 'home/search_english.html', context)
+        return render(request, 'home/results.html', context)
 
     # Meaning was found, lets process it
     else:
@@ -62,4 +59,4 @@ def explore_word(request, word):
             'words': Word.objects.filter(word=word),
             'search_result': Webpage.objects.filter(words__word=word)
         }
-        return render(request, 'home/search_english.html', context)
+        return render(request, 'home/results.html', context)

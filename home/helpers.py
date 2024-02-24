@@ -20,7 +20,7 @@ def is_dhivehi_word(word: str):
 
         # \u0780-\u07B1 is the range of dhivehi letters in the thaana unicode block -
         # (https://github.com/hadithmv/hadithmv.github.io/blob/ebc8c9780b9e5d9f9551ea69f06c4a2862301541/js/quranHmv-script.js#L1113)
-        if letter not in [chr(i) for i in range(1920, 1985)]:  # 1920 to 1970 is the range of thaana unicode block
+        if letter not in [chr(i) for i in range(1920, 1970)]:  # 1920 to 1970 is the range of thaana unicode block
             return False
     return True
 
