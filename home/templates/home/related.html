@@ -66,9 +66,6 @@
 
 {% block extra_js %}
     <script>
-        // for every word inside of .meanings make it a url with the word
-        // if the word is nurse it should be /explore/nurse
-        // use vanilla js
         var meanings = document.querySelectorAll('.meanings');
         meanings.forEach(function (meaning) {
             // split the meaning into words
