@@ -3,8 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 
-from home.helpers import is_dhivehi_word, remove_punctuation, process_related_words, process_meaning, preprocess_word, \
-    extract_text_from_html, find_sentence_with_word, process_textual_content
+from home.helpers import is_dhivehi_word, remove_punctuation, process_related_words, process_meaning, preprocess_word
 from home.models import Word, Webpage
 from mysite.settings.base import SITE_VERSION
 
@@ -56,7 +55,6 @@ def explore_word(request, word):
     # Meaning was found, lets process it
     else:
         process_meaning(word, meaning)
-        process_textual_content(request, word)
 
         context = {
             'word': word,

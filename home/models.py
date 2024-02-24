@@ -25,9 +25,7 @@ class Webpage(models.Model):
     We store the url, of the webpage that mentions the word
     """
     url = models.URLField(unique=True, max_length=1000)
-    title = models.CharField(max_length=100)
     words = models.ManyToManyField(Word)
-    image_link = models.URLField(blank=True, null=True)
     text_content = models.TextField(blank=True, null=True)
     text_section = models.TextField(blank=True, null=True)
 
@@ -41,7 +39,7 @@ class Webpage(models.Model):
 class SearchResponse(models.Model):
     date = models.DateField(auto_now_add=True, blank=True, null=True)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
-    response = models.TextField(db_index=False)
+    link = models.ManyToManyField(Webpage)
 
     def __str__(self):
         return f"{self.word} - {self.webpage} - {self.count}"

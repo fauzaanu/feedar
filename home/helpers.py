@@ -2,7 +2,7 @@ import json
 import os
 from datetime import date
 from string import ascii_letters, punctuation
-
+from bs4 import BeautifulSoup
 import requests
 from dhivehi_nlp import dictionary, stemmer
 from dhivehi_nlp._helpers import _db_connect
@@ -61,9 +61,6 @@ def get_radheef_val(word):
 def google_custom_search(word):
     word_obj, _ = Word.objects.get_or_create(word=word)
 
-    if SearchResponse.objects.filter(word=word_obj).exists():
-        return SearchResponse.objects.get(word=word_obj)
-
     # check if our daily limit is above 100
     current_requests = SearchResponse.objects.filter(date=date.today()).count()
     print(current_requests)
@@ -79,8 +76,19 @@ def google_custom_search(word):
     }
     response = requests.get(url, params=params)
     response_json = json.dumps(response.json())
-    search_results = SearchResponse.objects.create(word=word_obj, response=response_json)
-    return search_results
+
+    # get all the links from the response
+    items = response.json()['items']
+    for item in items:
+        url = item['link']
+        page, _ = Webpage.objects.get_or_create(url=url)
+        page.words.add(word_obj)
+        page.text_content = extract_text_from_html(url)
+        sentence = find_sentence_with_word(page.text_content, word)
+        if sentence:
+            page.text_section = sentence
+        page.save()
+    return True
 
 
 def get_related_words(filter=None):
@@ -144,38 +152,7 @@ def process_meaning(word, meaning):
                     Meaning.objects.get_or_create(meaning=meaning_item, word=related_word)
 
     # get the search result
-    search_result = google_custom_search(word)
-    if search_result:
-        search_result = search_result.response
-
-        # search result has a { } json object
-        search_result = json.loads(search_result)
-
-        for item in search_result['items']:
-            link = item['link']
-            title = item['title']
-
-            # find a .jpg or .png image from the item string
-            item_str = str(item)
-            image_link = None
-            begins_with = ['http://', 'https://']
-            ends_with = ['.jpg', '.png', '.jpeg', '.webp']
-
-            # find the first image in the item string
-            for image_end in ends_with:
-                imgage = item_str.find(image_end)
-                if imgage != -1:
-                    # find the first http or https before the image
-                    for start in begins_with:
-                        start_index = item_str.rfind(start, 0, imgage)
-                        if start_index != -1:
-                            image_link = item_str[start_index:imgage + len(image_end)]
-                            break
-
-            image_link = image_link if image_link else None
-            page, _ = Webpage.objects.get_or_create(url=link, title=title, image_link=image_link)
-            page.words.add(word_obj)
-
+    google_custom_search(word)
     return True
 
 
@@ -190,7 +167,7 @@ def preprocess_word(word):
     return word
 
 
-from bs4 import BeautifulSoup
+
 
 
 def extract_text_from_html(url):
@@ -206,8 +183,11 @@ def extract_text_from_html(url):
     # Get all text
     text = soup.get_text()
 
-    return text
+    # ensure that the text does not have bad characters
+    # good for postgresql
+    text = text.encode('utf-8').decode('utf-8')
 
+    return text
 
 def find_sentence_with_word(text, word):
     sentences = text.split('.')
@@ -216,30 +196,3 @@ def find_sentence_with_word(text, word):
         if word in sentence:
             return sentence
     return None
-
-
-def null_characters(word):
-    return word.replace('\x00', '')
-
-
-def process_textual_content(request, word):
-    # process textual content
-    websites = Webpage.objects.filter(words__word=word)
-    for site in websites:
-        if site.text_section:
-            continue
-
-        if not site.text_content:
-            # get the text content from the website
-            text = extract_text_from_html(site.url)
-            site.text_content = null_characters(text)
-            site.save()
-
-        else:
-            sentence = find_sentence_with_word(site.text_content, word)
-            if sentence:
-                site.text_section = null_characters(sentence)
-                site.save()
-            else:
-                site.delete()
-                continue
