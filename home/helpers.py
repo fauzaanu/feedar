@@ -63,6 +63,24 @@ def google_custom_search(word):
 
     # do we have Webpage objects for this word?
     if Webpage.objects.filter(words__word=word).exists():
+        all_pages = Webpage.objects.filter(words__word=word)
+        for page in all_pages:
+            if page.text_section:
+                # remove english words
+                text = page.text_section
+                for word in text.split():
+                    for letter in word:
+                        if letter in ascii_letters:
+                            text = text.replace(word, '')
+                        if letter in punctuation:
+                            text = text.replace(word, '')
+                        if letter not in [chr(i) for i in range(1920, 1970)]:
+                            text = text.replace(word, '')
+
+                if text.isspace():
+                    page.delete()
+                page.text_section = text
+                page.save()
         return None
 
     # check if our daily limit is above 100
@@ -87,7 +105,6 @@ def google_custom_search(word):
         url = item['link']
         page, _ = Webpage.objects.get_or_create(url=url)
         page.words.add(word_obj)
-
 
         page.text_content = extract_text_from_html(url)
 
@@ -187,18 +204,15 @@ def extract_text_from_html(url):
 
     text = text.strip()
 
-    text = text.encode('utf-8').decode('utf-8')
-
     return text
 
 
 def find_sentence_with_word(text, word):
-    sentences = text.split('.')
-    # print(sentences)
+    # split into chucks of 500 words
+    chunks = [text[i:i + 500] for i in range(0, len(text), 500)]
+    sentences = [chunk for chunk in chunks if word in chunk]
+
     for sentence in sentences:
-        if word in sentence:
-            # is the word in the sentence?
-            if word in sentence:
-                return sentence
+        return sentence
 
     return None
