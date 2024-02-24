@@ -17,9 +17,8 @@
 - [x] redis setup
 - [x] get ready to deploy
 - [ ] rename home to radeef (migrations..)
-- [ ] PWA
+- [x] PWA
 - [x] utilize google free limits as much as possible
-- [ ] somewhere a definition is getting added as a word, find it.
 
 ### Later
 
