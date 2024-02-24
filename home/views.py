@@ -4,13 +4,17 @@ from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 
 from home.helpers import is_dhivehi_word, remove_punctuation, process_related_words, process_meaning, preprocess_word
-from home.models import Word, Webpage
+from home.models import Word, Webpage, Meaning
 from mysite.settings.base import SITE_VERSION
 
 
 @cache_page(60 * 60 * 24 * 30,
             key_prefix=SITE_VERSION)
 def home(request):
+    Webpage.objects.all().delete()
+    Word.objects.all().delete()
+    Meaning.objects.all().delete()
+
     return render(request, 'home/home.html')
 
 
