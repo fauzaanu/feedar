@@ -41,19 +41,19 @@ def get_radheef_val(word):
 
     # generated code from insomnia
 
-    payload = f"-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"searchText\"\r\n\r\n{word}\r\n-----011000010111000001101001--\r\n"
+    payload = f"-----011000010111000001101001\r\nContent-Disposition: form-exploration; name=\"searchText\"\r\n\r\n{word}\r\n-----011000010111000001101001--\r\n"
     headers = {
         "cookie": "ci_session=e2cals79khosk6e9nbcubpkednnl5rq9",
-        "Content-Type": "multipart/form-data; boundary=---011000010111000001101001"
+        "Content-Type": "multipart/form-exploration; boundary=---011000010111000001101001"
     }
 
     payload = payload.encode()
     response = requests.request("POST", url, data=payload, headers=headers)
-    with open('response.json', 'w') as f:
+    with open('exploration/response.json', 'w') as f:
         f.write(response.text)
 
-    if response.json()['data']:
-        return [resp for resp in response.json()['data']]
+    if response.json()['exploration']:
+        return [resp for resp in response.json()['exploration']]
     else:
         return None
 
