@@ -218,6 +218,10 @@ def find_sentence_with_word(text, word):
     return None
 
 
+def null_characters(word):
+    return word.replace('\x00', '')
+
+
 def process_textual_content(request, word):
     # process textual content
     websites = Webpage.objects.filter(words__word=word)
@@ -225,22 +229,17 @@ def process_textual_content(request, word):
         if site.text_section:
             continue
 
-        if site.text_content:
+        if not site.text_content:
+            # get the text content from the website
+            text = extract_text_from_html(site.url)
+            site.text_content = null_characters(text)
+            site.save()
+
+        else:
             sentence = find_sentence_with_word(site.text_content, word)
             if sentence:
-                site.text_section = sentence
-
-                # ValueError: A string literal cannot contain NUL (0x00) characters.
-                # remove the null characters from the string
-                site.text_section = site.text_section.replace('\x00', '')
-
+                site.text_section = null_characters(sentence)
                 site.save()
             else:
                 site.delete()
                 continue
-
-        if not site.text_content:
-            # get the text content from the website
-            text = extract_text_from_html(site.url)
-            site.text_content = text
-            site.save()
