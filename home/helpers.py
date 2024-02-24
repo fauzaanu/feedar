@@ -167,9 +167,6 @@ def preprocess_word(word):
     return word
 
 
-
-
-
 def extract_text_from_html(url):
     response = requests.get(url)
     html_content = response.content
@@ -194,10 +191,27 @@ def extract_text_from_html(url):
 
     return text
 
+
 def find_sentence_with_word(text, word):
     sentences = text.split('.')
     # print(sentences)
     for sentence in sentences:
         if word in sentence:
+
+            # remove english words
+            for word in sentence.split():
+                for letter in word:
+                    if letter in ascii_letters:
+                        sentence = sentence.replace(word, '')
+
+            # shorten the sentence by stripping if too long
+            word_length = len(word)
+
+            if len(sentence) > 20 * word_length:
+                # find the position of the word
+                position = sentence.find(word)
+                # add 10 * word_length to the position and subtract 10 * word_length from the position
+                sentence = sentence[position - 10 * word_length:position + 10 * word_length]
             return sentence
+
     return None
