@@ -1,11 +1,10 @@
 # extension functions for dhivehi nlp library - accessing the sqlite database they have
 import json
 
-from dhivehi_nlp import dictionary
 from dhivehi_nlp._helpers import _db_connect
 
-from home.helpers.formatting import remove_punctuation
-from home.models import Word, Meaning
+from home.helpers.mynameisroot import hey_root
+from home.models import Word
 
 
 def get_related_words(filter: str):
@@ -38,29 +37,71 @@ def process_related_words(word):
     return True
 
 
-def process_meaning(word, meaning):
+# def process_meaning(word, meaning):
+#     """
+#     Most likely this will never run as we initially move everything in sqlite to our database
+#     """
+#     word_obj, _ = Word.objects.get_or_create(word=word)
+#
+#     for mean in meaning:
+#         mean = remove_punctuation(mean)
+#         if mean:
+#             Meaning.objects.get_or_create(meaning=mean, word=word_obj)
+#
+#     word_length = len(word)
+#     for i in range(word_length):
+#         wrd = word[:word_length - i]
+#         meaning = dictionary.get_definition(wrd)
+#         if meaning:
+#             related_word, _ = Word.objects.get_or_create(word=wrd)
+#             word_obj.related_words.add(related_word)
+#             word_obj.save()
+#
+#             for meaning_item in meaning:
+#                 meaning_item = remove_punctuation(meaning_item)
+#                 if meaning_item:
+#                     Meaning.objects.get_or_create(meaning=meaning_item, word=related_word)
+#
+#     return True
+
+
+
+def get_part_of_speech(word):
     """
-    Most likely this will never run as we initially move everything in sqlite to our database
+    Get the part of speech from dhivehi nlp db
     """
-    word_obj, _ = Word.objects.get_or_create(word=word)
+    con = _db_connect()
+    cursor = con.cursor()
+    query = f"SELECT part_of_speech FROM radheef WHERE word='{word}'"
+    cursor.execute(query)
+    result = cursor.fetchone()
+    con.close()
+    if result is None:
+        return None
 
-    for mean in meaning:
-        mean = remove_punctuation(mean)
-        if mean:
-            Meaning.objects.get_or_create(meaning=mean, word=word_obj)
+    part_of_speech_convert = {
+        'ނަން': 'nan',
+        'ކަން': 'kan',
+        'ނަންއިތުރު': 'nan ithuru',
+        'ކަންއިތުރު': 'kan ithuru',
+        'މަސްދަރު': 'masdharu',
+        'ނަންއިތުރުގެ ނަން': 'nan ithuruge nan',
+        'އިތުރު': 'ithuru',
+        'އަކުރު': 'akuru'
+    }
 
-    word_length = len(word)
-    for i in range(word_length):
-        wrd = word[:word_length - i]
-        meaning = dictionary.get_definition(wrd)
-        if meaning:
-            related_word, _ = Word.objects.get_or_create(word=wrd)
-            word_obj.related_words.add(related_word)
-            word_obj.save()
+    if result[0] in part_of_speech_convert:
+        return part_of_speech_convert[result[0]]
+    elif result[0] == None:
+        return None
+    else:
+        message = f"""
+# Un-recognized part of speech
 
-            for meaning_item in meaning:
-                meaning_item = remove_punctuation(meaning_item)
-                if meaning_item:
-                    Meaning.objects.get_or_create(meaning=meaning_item, word=related_word)
+> While processing the part of speech for the word {word}, we encountered an un-recognized part of speech.
 
-    return True
+word: {word}
+part of speech: {result[0]}       
+"""
+        hey_root(message)
+        raise ValueError(f"Un-regconized part of speech: {result[0]}")

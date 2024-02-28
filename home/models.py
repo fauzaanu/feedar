@@ -2,11 +2,25 @@ from django.db import models
 
 
 # Create your models here.
+class PartOfSpeech(models.Model):
+    poc = models.CharField(max_length=100,
+                           choices=[
+                               ('nan', 'nan'),
+                               ('kan', 'kan'),
+                               ('nan ithuru', 'nan_ithuru'),
+                               ('kan ithuru', 'kan_ithuru'),
+                               ('masdharu', 'masdharu'),
+                               ('nan ithuruge nan', 'nan_ithuruge_nan'),
+                               ('ithuru', 'ithuru'),
+                               ('akuru', 'akuru')
+                           ],
+                           blank=True, null=True)
 
 
 class Word(models.Model):
     word = models.CharField(max_length=100, unique=True)
     related_words = models.ManyToManyField('self', blank=True)
+    category = models.ManyToManyField(PartOfSpeech)
 
     def __str__(self):
         return self.word
@@ -15,6 +29,11 @@ class Word(models.Model):
 class Meaning(models.Model):
     meaning = models.CharField(max_length=1000)
     word = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='meanings')
+    source = models.CharField(choices=[
+        ("DhivehiNLP", "Dhivehi_NLP"),
+        ("radheef.mv", "radheef_mv"),
+    ]
+        , max_length=100, default='DhivehiNLP')
 
     def __str__(self):
         return self.meaning

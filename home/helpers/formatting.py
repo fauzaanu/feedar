@@ -45,10 +45,11 @@ def remove_all_english(text: str):
 def preprocess_word(word):
     word = word.lower()
     word = remove_punctuation(word)
-    word = stemmer.stem(word)
+    stemmed_word = stemmer.stem(word)
 
-    if type(word) == list:
-        word = word[0]
+    if type(stemmed_word) == list:
+        if stemmed_word:
+            word = stemmed_word[0]
 
     return word
 

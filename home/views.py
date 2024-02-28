@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 
-from home.helpers.dhivehi_nlp_ext import process_related_words, process_meaning
+from home.helpers.dhivehi_nlp_ext import process_related_words
 from home.helpers.formatting import remove_punctuation, is_dhivehi_word, preprocess_word
 from home.helpers.search_process import google_custom_search
 from home.models import Word, Webpage, Meaning, SearchResponse
@@ -16,9 +16,9 @@ from mysite.settings.base import SITE_VERSION
 @cache_page(60 * 60 * 24 * 30,
             key_prefix=SITE_VERSION)
 def home(request):
-    # Webpage.objects.all().delete()
-    # Word.objects.all().delete()
-    # Meaning.objects.all().delete()
+    Webpage.objects.all().delete()
+    Word.objects.all().delete()
+    Meaning.objects.all().delete()
 
     # NEED TO LOAD THE DATABASE TO POSTGRES TO SPEEDUP
     make_db()
@@ -81,7 +81,7 @@ def explore_word(request, word):
 
     # Meaning was found, lets process it
     else:
-        process_meaning(word, meaning)
+        # removed process function : things could break
         on_demand_english_removal(word)
 
         if request.session.get('session_key'):
