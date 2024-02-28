@@ -58,51 +58,6 @@ def make_db():
         process_radheef_api(word, part_of_speech)
 
 
-
-
-
-# @periodic_task(crontab(minute=0, hour=1))
-# def make_db():
-#     """
-#     Make the database
-#     """
-#     logging.error("Huey started")
-#     words = dictionary.get_wordlist()
-#
-#     # in one query check if all words exist
-#
-#     status = Word.objects.filter(word__in=words).values_list('word', flat=True)
-#     words = [word for word in words if word not in status]
-#
-#     for word in words:
-#         if Word.objects.filter(word=word).exists():
-#             continue
-#
-#         logging.error(f"Processing word: {word}")
-#         meaning_dnlp = dictionary.get_definition(preprocess_word(word))
-#         #
-#
-#         part_of_speech = None
-#         if meaning_dnlp:
-#             try:
-#                 part_of_speech = get_part_of_speech(word)
-#             except ValueError:
-#                 part_of_speech = None
-#
-#         if meaning_dnlp:
-#             word, _ = Word.objects.get_or_create(word=word)
-#             part_of_speech, _ = PartOfSpeech.objects.get_or_create(poc=part_of_speech)
-#             word.category.add(part_of_speech)
-#             process_meaning(meaning_dnlp, word, 'DhivehiNLP')
-#             logging.error(f"Meaning from dhivehiNLP added: {meaning_dnlp}")
-#
-#         # Queue process_radheef_api task to run 5 minutes later
-#         eta = datetime.now() + timedelta(seconds=5)
-#         logging.error(f"Queueing radheef.mv for {word} at {eta}")
-#         process_radheef_api.schedule(args=(word, part_of_speech), eta=eta)
-
-
-@task
 def process_radheef_api(word, part_of_speech):
     """
     To not overload the radheef.mv server, we will process the words in batches and with a lot of delay
