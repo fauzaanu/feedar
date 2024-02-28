@@ -28,8 +28,11 @@ def make_db():
 
     words = Word.objects.filter(word__in=words)
 
+    total_words = words.count()
+    skipped_words = int()
     for word in words:
         if Word.objects.filter(word=word).exists():
+            skipped_words += 1
             continue
 
         logging.error(f"Processing word: {word}")
@@ -53,6 +56,8 @@ def make_db():
         eta = datetime.now() + timedelta(seconds=5)
         logging.error(f"Queueing radheef.mv for {word} at {eta}")
         process_radheef_api(word)
+
+    logging.error(f"Total words: {total_words}, Skipped words: {skipped_words}")
 
 
 def process_radheef_api(word):

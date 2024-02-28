@@ -2,28 +2,16 @@
 
 ## Features
 
-- Every word in the definition is a click to search
-- Google Search API to get top 10 for the word
-- Words that dont have a definition, are reverse searched to get other words that include the word within the words
-  definition
-- add Adobe Stock for images
+- TTS for word pronunciation
+- Example usage sentences of the word scraped from WWW
+- Some words in radheef does not return any meanings.
+- we look for mentions of these no meaning words in the definitions of other words. 
+- If found, the words are listed.
 
 ## TODO
 
-### Now
+Moved to Issues
 
-- [x] How to find the root word: (ge, men, remover?)
-- [x] Caching
-- [x] redis setup
-- [x] get ready to deploy
-- [ ] rename home to radeef (migrations..)
-- [x] PWA
-- [x] utilize google free limits as much as possible
-
-### Later
-
-- [ ] connect to radheef.mv db too (some words are missing)
-- [ ] Add google translate
 
 ## Credits
 
