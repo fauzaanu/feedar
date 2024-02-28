@@ -12,7 +12,7 @@
                                 {{ word }}
                             </h1>
                             <div id="play-sound_{{ word }}"
-                                 class="bg-dv_red p-2 rounded border-2 border-dv_white">
+                                 class="text-black bg-dv_white p-2 rounded">
                                 {% include 'icons/volume-1.svg' %}
                             </div>
                         </div>
@@ -32,7 +32,45 @@
 
 
                         {% for meaning in word.meanings.all %}
-                            <p class="leading-loose meanings flex gap-2 flex-wrap my-7">{{ meaning }}</p>
+                            <div class="leading-loose meanings flex gap-2 flex-wrap my-7">
+
+
+                                {{ meaning }}
+
+
+                            </div>
+
+                            <div class="flex gap-2" dir="rtl">
+                                <div class="part-of-speech flex flex-row bg-dv_white text-black px-5 py-2 gap-2 rounded">
+                                    <div>
+                                        ބަސް ބެހޭ ބައިތަކުގެ ތެރެއިން މިބަސް ވަންނަ ބަޔަކީ :
+                                    </div>
+                                    <div>
+                                        {{ meaning.get_part_of_speech }}
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-row source bg-dv_white text-black px-5 py-2 gap-2 rounded">
+                                    <div>
+                                        މާނަ ނެގިފައިވަނީ
+                                    </div>
+                                    <div>
+                                        {{ meaning.source }}
+                                    </div>
+                                    <div>
+                                        އިން
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
                         {% endfor %}
                     {% endfor %}
                 {% endif %}
@@ -99,13 +137,13 @@
                 let new_text = '';
 
                 for (const word of words) {
-                    
+
                     // if the word is just 1 character
                     if (word.length === 1) {
                         continue;
                     }
-                    
-                    
+
+
                     // if the word has odd number of characters
                     if (word.length % 2 !== 0) {
                         continue;

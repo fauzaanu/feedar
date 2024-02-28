@@ -38,6 +38,33 @@ class Meaning(models.Model):
     def __str__(self):
         return self.meaning
 
+    def get_part_of_speech(self):
+
+        poc_dhivehi = {
+            'nan': 'ނަން',
+            'kan': 'ކަން',
+            'nan ithuru': 'ނަންއިތުރު',
+            'kan ithuru': 'ކަންއިތުރު',
+            'masdharu': 'މަސްދަރު',
+            'nan ithuruge nan': 'ނަންއިތުރުގެ ނަން',
+            'ithuru': 'އިތުރު',
+            'akuru': 'އަކުރު'
+        }
+
+        display_string = ''
+        categories = self.word.category.all()
+        for category in categories:
+            poc = category.poc
+
+            if display_string != '':
+                display_string += ', '
+
+            if poc in poc_dhivehi:
+                display_string += poc_dhivehi[poc]
+
+        return display_string
+
+
 
 class Webpage(models.Model):
     """
