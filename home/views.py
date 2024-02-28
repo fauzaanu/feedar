@@ -84,29 +84,24 @@ def explore_word(request, word):
         on_demand_english_removal(word)
 
         # que maybe ongoing : to serve the user right away we need to process just this word
-        if not Word.objects.filter(word=word).exists():
-            logging.error(f"Processing word: {word}")
-            meaning_dnlp = dictionary.get_definition(preprocess_word(word))
-            # meaning_radheef_api = get_radheef_val(word)
+        logging.error(f"Processing word: {word}")
+        meaning_dnlp = dictionary.get_definition(preprocess_word(word))
 
-            part_of_speech = None
-            if meaning_dnlp:
-                try:
-                    part_of_speech = get_part_of_speech(word)
-                except ValueError:
-                    part_of_speech = None
+        part_of_speech = None
+        if meaning_dnlp:
+            try:
+                part_of_speech = get_part_of_speech(word)
+            except ValueError:
+                part_of_speech = None
 
-            if meaning_dnlp:
-                word, _ = Word.objects.get_or_create(word=word)
-                part_of_speech, _ = PartOfSpeech.objects.get_or_create(poc=part_of_speech)
-                word.category.add(part_of_speech)
-                process_meaning(meaning_dnlp, word, 'DhivehiNLP')
-                logging.error(f"Meaning from dhivehiNLP added: {meaning_dnlp}")
+        if meaning_dnlp:
+            word, _ = Word.objects.get_or_create(word=word)
+            part_of_speech, _ = PartOfSpeech.objects.get_or_create(poc=part_of_speech)
+            word.category.add(part_of_speech)
+            process_meaning(meaning_dnlp, word, 'DhivehiNLP')
+            logging.error(f"Meaning from dhivehiNLP added: {meaning_dnlp}")
 
-            # Queue process_radheef_api task to run 5 minutes later
-            eta = datetime.now() + timedelta(seconds=5)
-            logging.error(f"Queueing radheef.mv for {word} at {eta}")
-            process_radheef_api(word, part_of_speech)
+        process_radheef_api(word, part_of_speech)
 
         if request.session.get('session_key'):
             del request.session['session_key']
