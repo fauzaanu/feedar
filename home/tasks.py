@@ -54,7 +54,6 @@ def make_db():
         # Queue process_radheef_api task to run 5 minutes later
         eta = datetime.now() + timedelta(seconds=5)
         logging.error(f"Queueing radheef.mv for {word} at {eta}")
-
         process_radheef_api(word, part_of_speech)
 
 
