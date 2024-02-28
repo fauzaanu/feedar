@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("pwa.urls")),
     path('', include('home.urls')),
+    path('about/', include('about.urls')),
 ]

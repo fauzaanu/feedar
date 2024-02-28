@@ -18,11 +18,12 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 load_dotenv()
 
 # Application definition
-SITE_NAME = "mysite"
+SITE_NAME = "RADHEEFU"
 
 FIRST_PARTY_APPS = [
     "home",
     "pwa",
+    'about',
 ]
 
 THIRD_PARTY_APPS = [
