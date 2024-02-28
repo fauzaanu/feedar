@@ -101,8 +101,6 @@ def explore_word(request, word):
             process_meaning(meaning_dnlp, word, 'DhivehiNLP')
             logging.error(f"Meaning from dhivehiNLP added: {meaning_dnlp}")
 
-        process_radheef_api(word, part_of_speech)
-
         if request.session.get('session_key'):
             del request.session['session_key']
         session_key = random.randint(100000, 999999)
