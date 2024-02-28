@@ -108,10 +108,10 @@ def explore_word(request, word):
             logging.error(f"Queueing radheef.mv for {word} at {eta}")
             process_radheef_api(word, part_of_speech)
 
-            if request.session.get('session_key'):
-                del request.session['session_key']
-            session_key = random.randint(100000, 999999)
-            request.session['session_key'] = session_key
+        if request.session.get('session_key'):
+            del request.session['session_key']
+        session_key = random.randint(100000, 999999)
+        request.session['session_key'] = session_key
 
         # process the google search
         google_custom_search(word)
