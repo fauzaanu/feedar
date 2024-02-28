@@ -31,11 +31,14 @@ def google_custom_search(word):
     response = google_custom_search_api(word)
     response_json = response.json()
     amount = response_json['searchInformation']['totalResults']
-    items = response.json()['items']
-    urls = [item['link'] for item in items]
 
     if amount == '0':
         return None
+
+    items = response.json()['items']
+    urls = [item['link'] for item in items]
+
+
 
     search = SearchResponse.objects.create(word=word_obj)
 
