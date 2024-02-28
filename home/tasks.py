@@ -26,8 +26,7 @@ def make_db():
 
     # in one query check if all words exist
 
-    status = Word.objects.filter(word__in=words).values_list('word', flat=True)
-    words = [word for word in words if word not in status]
+    words = Word.objects.filter(word__in=words)
 
     for word in words:
         if Word.objects.filter(word=word).exists():
@@ -35,7 +34,6 @@ def make_db():
 
         logging.error(f"Processing word: {word}")
         meaning_dnlp = dictionary.get_definition(preprocess_word(word))
-        # meaning_radheef_api = get_radheef_val(word)
 
         part_of_speech = None
         if meaning_dnlp:
@@ -54,19 +52,19 @@ def make_db():
         # Queue process_radheef_api task to run 5 minutes later
         eta = datetime.now() + timedelta(seconds=5)
         logging.error(f"Queueing radheef.mv for {word} at {eta}")
-        process_radheef_api(word, part_of_speech)
+        process_radheef_api(word)
 
 
-def process_radheef_api(word, part_of_speech):
+def process_radheef_api(word):
     """
     To not overload the radheef.mv server, we will process the words in batches and with a lot of delay
     """
     logging.error(f"Processing radheef.mv for {word}")
     meaning_radheef_api = get_radheef_val(word)
-    word, _ = Word.objects.get_or_create(word=word, category=part_of_speech)
+    word, _ = Word.objects.get_or_create(word=word)
     process_meaning(meaning_radheef_api, word, 'radheef.mv')
     logging.error(f"Meaning from radheef.mv added: {meaning_radheef_api}")
-    sleep(5)
+    sleep(0.1)
 
 
 def extract_text_from_html(url):
