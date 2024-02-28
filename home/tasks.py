@@ -24,11 +24,7 @@ def make_db():
     logging.error("Huey started")
     words = dictionary.get_wordlist()
 
-    # in one query check if all words exist
-
-    words = Word.objects.filter(word__in=words)
-
-    total_words = words.count()
+    total_words = len(words)
     skipped_words = int()
     for word in words:
         if Word.objects.filter(word=word).exists():
