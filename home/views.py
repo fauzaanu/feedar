@@ -1,15 +1,18 @@
+import logging
 import random
+from datetime import datetime, timedelta
 
 from dhivehi_nlp import dictionary
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 
-from home.helpers.dhivehi_nlp_ext import process_related_words
+from home.helpers.db_process import process_meaning
+from home.helpers.dhivehi_nlp_ext import process_related_words, get_part_of_speech
 from home.helpers.formatting import remove_punctuation, is_dhivehi_word, preprocess_word
 from home.helpers.search_process import google_custom_search
-from home.models import Word, Webpage, Meaning, SearchResponse
-from home.tasks import make_db
+from home.models import Word, Webpage, Meaning, SearchResponse, PartOfSpeech
+from home.tasks import make_db, process_radheef_api
 from mysite.settings.base import SITE_VERSION
 
 
@@ -80,30 +83,38 @@ def explore_word(request, word):
         # removed process function : things could break
         on_demand_english_removal(word)
 
-        if request.session.get('session_key'):
-            del request.session['session_key']
-        session_key = random.randint(100000, 999999)
-        request.session['session_key'] = session_key
+        # que maybe ongoing : to serve the user right away we need to process just this word
+        if not Word.objects.filter(word=word).exists():
+            logging.error(f"Processing word: {word}")
+            meaning_dnlp = dictionary.get_definition(preprocess_word(word))
+            # meaning_radheef_api = get_radheef_val(word)
+
+            part_of_speech = None
+            if meaning_dnlp:
+                try:
+                    part_of_speech = get_part_of_speech(word)
+                except ValueError:
+                    part_of_speech = None
+
+            if meaning_dnlp:
+                word, _ = Word.objects.get_or_create(word=word)
+                part_of_speech, _ = PartOfSpeech.objects.get_or_create(poc=part_of_speech)
+                word.category.add(part_of_speech)
+                process_meaning(meaning_dnlp, word, 'DhivehiNLP')
+                logging.error(f"Meaning from dhivehiNLP added: {meaning_dnlp}")
+
+            # Queue process_radheef_api task to run 5 minutes later
+            eta = datetime.now() + timedelta(seconds=5)
+            logging.error(f"Queueing radheef.mv for {word} at {eta}")
+            process_radheef_api(word, part_of_speech)
+
+            if request.session.get('session_key'):
+                del request.session['session_key']
+            session_key = random.randint(100000, 999999)
+            request.session['session_key'] = session_key
 
         # process the google search
         google_custom_search(word)
-
-        # # check and remove all Webpages with not dhivehi text
-        # pages = Webpage.objects.filter(words__word=word, status='success')
-        # for page in pages:
-        #     text = page.text_section
-        #     if page.text_section:
-        #         for word in text.split():
-        #             for letter in word:
-        #                 if letter not in [chr(i) for i in range(1920, 1970)]:
-        #                     text = text.replace(word, '')
-        #
-        #         if text.strip() == '':
-        #             page.status = 'failed'
-        #             page.save()
-        #         else:
-        #             page.text_section = text
-        #             page.save()
 
         context = {
             "session_key": session_key,
