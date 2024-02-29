@@ -16,7 +16,11 @@ vowels = {
 }
 
 sukun_words = {
-    "ް": "h"
+    "އް": "h",
+    "ސް": "s",
+    "ން": "n",
+    "ށް": "h",
+    "ތް": "iy",
 }
 
 alif_compounds = {
@@ -72,7 +76,6 @@ punctuations = {
     "،": ",",
     ".": ".",
     "/": "/",
-    "÷": "",
     "}": "{",
     "{": "}",
     "|": "|",
@@ -85,7 +88,14 @@ punctuations = {
     "(": "("
 }
 
+
 def thaana_to_latin(text):
+    """
+    Takes thaana and converts it to latin
+    """
+    for key, value in sukun_words.items():
+        text = text.replace(key, value)
+    print("After the dv2en processing it looks like this: ", text)
     for key, value in vowels.items():
         text = text.replace(key, value)
     for key, value in alif_compounds.items():
@@ -94,12 +104,50 @@ def thaana_to_latin(text):
         text = text.replace(key, value)
     for key, value in punctuations.items():
         text = text.replace(key, value)
+
+
+    with open("latin_to_thaana.txt", "w",encoding='utf-8') as f:
+        f.write(text)
+
+    return text
+
+
+def latin_to_thaana(text):
+    """
+    Takes latin and converts it to thaana
+    """
+
+    for key, value in consonants.items():
+        text = text.replace(value, key)
+    print("Consonants: ", text)
+
     for key, value in sukun_words.items():
-        text = text.replace(key, value)
+        text = text.replace(value, key)
+
+    print("Sukun: ", text)
+    for key, value in vowels.items():
+        text = text.replace(value, key)
+
+    print("Vowels: ", text)
+    for key, value in alif_compounds.items():
+        text = text.replace(value, key)
+
+    print("Alif Compounds: ", text)
+
+
+    for key, value in punctuations.items():
+        text = text.replace(value, key)
+
+    print("punctuations: ", text)
+
+    with open("thaana_to_latin.txt", "w",encoding='utf-8') as f:
+        f.write(text)
+
     return text
 
 
 # letting copilot do it first
 if __name__ == "__main__":
-    print(thaana_to_latin("ކަޅުތުއްކަލާކޮށި"))
-
+    print(latin_to_thaana(
+        "akuru")
+    )
