@@ -34,6 +34,7 @@ def make_db():
 
     total_words = len(words)
     skipped_words = int()
+    processed_words = int()
     for word in words:
         if Word.objects.filter(word=word).exists():
             skipped_words += 1
@@ -57,12 +58,11 @@ def make_db():
             logging.error(f"Meaning from dhivehiNLP added: {meaning_dnlp}")
 
         process_radheef_api(word)
+        processed_words += 1
 
-    hey_root(
-        f"Total words: {total_words}, Skipped words: {skipped_words}"
-    )
-
-    logging.error(f"Total words: {total_words}, Skipped words: {skipped_words}")
+    msg = f"Total words: {total_words}, Processed words: {processed_words}, Skipped words: {skipped_words}"
+    hey_root(msg)
+    logging.error(msg)
 
 
 def process_radheef_api(word):
