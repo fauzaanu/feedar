@@ -65,7 +65,6 @@ class Meaning(models.Model):
         return display_string
 
 
-
 class Webpage(models.Model):
     """
     We store the url, of the webpage that mentions the word
@@ -77,7 +76,7 @@ class Webpage(models.Model):
     status = models.CharField(max_length=100, default='started')
 
     def __str__(self):
-        return self.title
+        return self.url
 
     def get_domain(self):
         return self.url.split('/')[2]
@@ -89,7 +88,7 @@ class SearchResponse(models.Model):
     link = models.ManyToManyField(Webpage)
 
     def __str__(self):
-        return f"{self.word} - {self.webpage} - {self.count}"
+        return self.word.word
 
 
 class IndexQueue(models.Model):

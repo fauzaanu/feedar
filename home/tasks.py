@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 from dhivehi_nlp import dictionary
 from huey.contrib.djhuey import task
+from home.helpers.mynameisroot import hey_root
 
 from home.helpers.api_calls import get_radheef_val
 from home.helpers.db_process import process_meaning
@@ -52,6 +53,10 @@ def make_db():
         eta = datetime.now() + timedelta(seconds=5)
         logging.error(f"Queueing radheef.mv for {word} at {eta}")
         process_radheef_api(word)
+
+    hey_root(
+        f"Total words: {total_words}, Skipped words: {skipped_words}"
+    )
 
     logging.error(f"Total words: {total_words}, Skipped words: {skipped_words}")
 
