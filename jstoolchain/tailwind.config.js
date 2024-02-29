@@ -11,7 +11,8 @@ module.exports = {
             },
             fontFamily: {
                 'faruma': ['faruma'],
-                'sangu': ['sangu',]
+                'sangu': ['sangu',],
+                'kathi': ['kathi',]
             },
         },
     },

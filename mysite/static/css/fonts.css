@@ -6,6 +6,11 @@
     src: url("AK Rasmee.ttf");
 }
 
+@font-face {
+    font-family: "kathi";
+    src: url("DAM_Kathivalhi.otf");
+}
+
 /*@font-face {*/
 /*    font-family: "faruma";*/
 /*    src: url("Faruma.otf");*/
