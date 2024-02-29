@@ -3,19 +3,19 @@
 
 
 {% block content %}
-    <div class="max-w-screen-sm flex flex-col gap-10 mx-auto text-right p-5 text-dv_white">
-        <h1 class="text-3xl leading-loose text-dv_green">
+    <div class="max-w-screen-sm flex flex-col gap-10 mx-auto text-right p-5 text-dv_white/70">
+        <h1 class="text-3xl leading-loose text-dv_white">
             {{ heading }}
         </h1>
         <p class="text-2xl font-faruma leading-loose">
             {{ about }}
         </p>
-        <a class="text-2xl underline font-faruma leading-loose text-dv_green"
+        <a class="text-2xl underline font-faruma leading-loose text-primary bg-dv_white p-2 rounded-md text-center"
            href="https://github.com/fauzaanu/feedar/">
             ޕްރޮޖެކްޓުގެ ކޯޑު ބަލާލަން ފިތާލާ
         </a>
 
-        <h2 class="text-3xl leading-loose text-dv_green">
+        <h2 class="text-3xl leading-loose text-dv_white">
             {{ sub_heading }}
         </h2>
         {% for tent in content %}
@@ -25,18 +25,20 @@
         {% endfor %}
 
         <div>
-            <h3>
-                ބައެއް ބަސް ނުފެންނަ މައްސަލަ އަށް ގެނެވުނު ހައްލު | ރަދީފް އެމްވީ އާއި މި ޕްރޮޖެކްޓާއި ހުރި ތަފާތު
+            <h3 class="text-3xl leading-loose text-dv_white">
+                ބައެއް ބަސް ނުފެންނަ މައްސަލަ އަށް ގެނެވުނު ހައްލު
             </h3>
             <img src="{% static 'about/img/radheef_mv.png' %}" alt="">
             <img src="{% static 'about/img/radheefu_com.png' %}" alt="">
         </div>
 
         <p class="text-2xl font-faruma leading-loose">
-            ޕްރޮޖެކްޓް ކުރިއެރުވުމަށް ހިޔާލެއް ދެއްވަން ބޭނުން ނަމަ ޓްރެލޯ ބޯޑަށް ކޮމެންޓެއް ކޮށްލަދިނުން އެދެން
+            ޕްރޮޖެކްޓްގެ ރޭވުން ކުރިޔަށްދަނީ ޓްރެލޯގައި، ކޮންމެ ފަރާތަކަށްވެސް ޓްރެލޯ އެކައުންޓެއް ހަދާލުމަށް ފަހު
+            ހިޔާލެއް ހުށައަޅާލުމުގެ ފުރުސަތު އެބައޮތް
         </p>
 
-        <a class="text-2xl underline font-faruma leading-loose text-dv_green"
+
+        <a class="text-2xl underline font-faruma leading-loose text-primary bg-dv_white p-2 rounded-md text-center"
            href="https://trello.com/b/iIeOs87c/radheefu-project">
             ޓްރެލޯބޯޑުގެ ލިންކު
         </a>
