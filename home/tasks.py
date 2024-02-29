@@ -49,9 +49,6 @@ def make_db():
             process_meaning(meaning_dnlp, word, 'DhivehiNLP')
             logging.error(f"Meaning from dhivehiNLP added: {meaning_dnlp}")
 
-        # Queue process_radheef_api task to run 5 minutes later
-        eta = datetime.now() + timedelta(seconds=5)
-        logging.error(f"Queueing radheef.mv for {word} at {eta}")
         process_radheef_api(word)
 
     hey_root(
