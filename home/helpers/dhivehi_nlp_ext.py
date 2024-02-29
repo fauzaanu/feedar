@@ -25,8 +25,6 @@ def process_related_words(word):
     Process related words for a given word
     """
     related_words = get_related_words(filter=word)
-    with open('related_words.txt', 'w', encoding='utf-8') as f:
-        f.write(json.dumps(related_words))
     if related_words:
         q_word, _ = Word.objects.get_or_create(word=word)
         for related_word in related_words:

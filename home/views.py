@@ -2,6 +2,7 @@ import logging
 import random
 from datetime import datetime, timedelta
 
+import pytz
 from dhivehi_nlp import dictionary
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -11,7 +12,7 @@ from home.helpers.db_process import process_meaning
 from home.helpers.dhivehi_nlp_ext import process_related_words, get_part_of_speech
 from home.helpers.formatting import remove_punctuation, is_dhivehi_word, preprocess_word
 from home.helpers.search_process import google_custom_search
-from home.models import Word, Webpage, Meaning, SearchResponse, PartOfSpeech
+from home.models import Word, Webpage, Meaning, SearchResponse, PartOfSpeech, SearchManager
 from home.tasks import make_db, process_radheef_api
 from mysite.settings.base import SITE_VERSION
 
@@ -41,9 +42,9 @@ def search_english(request):
 def on_demand_english_removal(word):
     pages = Webpage.objects.filter(words__word=word, text_section__isnull=False)
     for page in pages:
-
         text = page.text_section
         if page.text_section:
+
             # remove english words
             for word in text.split():
                 if not is_dhivehi_word(word):
@@ -51,7 +52,6 @@ def on_demand_english_removal(word):
 
             page.text_section = text
             page.save()
-
     return True
 
 
@@ -102,6 +102,7 @@ def explore_word(request, word):
             del request.session['session_key']
         session_key = random.randint(100000, 999999)
         request.session['session_key'] = session_key
+        SearchManager.objects.get_or_create(sezzon=session_key, duration=timedelta(seconds=60))
 
         # process the google search
         google_custom_search(word)
@@ -121,9 +122,33 @@ def hx_load_web_data(request, word, session_key):
         server_session_key = int(server_session_key)
         client_session_key = int(session_key)
 
-        print(f"Server Session key", server_session_key)
-        print(f"Client Session key", session_key)
-        print("Amount of pages", Webpage.objects.filter(words__word=word).count())
+        # get the session manager
+        session_manager = SearchManager.objects.get(sezzon=server_session_key)
+
+        session_started_on = session_manager.date_started
+        session_duration = session_manager.duration
+
+        current_time = datetime.now(pytz.timezone('Indian/Maldives'))
+        current_duration = current_time - session_started_on
+
+        print(f"Session started on: {session_started_on}")
+        print(f"Session duration: {session_duration}")
+        print(f"Current time: {current_time}")
+        print(f"Current duration: {current_duration}")
+
+        if current_duration > session_duration:
+            return render(
+                request,
+                'home/hx_comps/final.html',
+                {
+                    'word': word,
+                    'search_result': Webpage.objects.filter(words__word=word),
+                }
+            )
+
+        # print(f"Server Session key", server_session_key)
+        # print(f"Client Session key", session_key)
+        # print("Amount of pages", Webpage.objects.filter(words__word=word).count())
         if not session_key:
             return HttpResponse('not')
 
@@ -142,11 +167,12 @@ def hx_load_web_data(request, word, session_key):
         print(success, failed, amount_of_results, rest)
 
         try:
-            search = SearchResponse.objects.get(word=Word.objects.get(word=word))
+            search = SearchResponse.objects.filter(word=Word.objects.get(word=word)).first()
         except SearchResponse.DoesNotExist:
             return HttpResponse('ERROR')
 
         amount_of_results_possible = search.link.count()
+        print("Amount of results possible", amount_of_results_possible)
 
         if amount_of_results_possible == 0:
             return render(

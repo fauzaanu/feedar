@@ -8,7 +8,7 @@
                     {% for word in words %}
                         <div class="flex gap-5 items-center text-dv_white font-faruma rounded-lg"
                              dir="rtl">
-                            <h1 class="flex text-6xl font-faruma my-10">
+                            <h1 class="flex text-6xl font-faruma my-5">
                                 {{ word }}
                             </h1>
                             <div id="play-sound_{{ word }}"
@@ -16,6 +16,9 @@
                                 {% include 'icons/volume-1.svg' %}
                             </div>
                         </div>
+                        <p class="flex flex-col gap-2 text-2xl font-semibold">
+                            {{ word.get_latin }}
+                        </p>
 
                         <audio controls
                                class="hidden"
@@ -33,44 +36,20 @@
 
                         {% for meaning in word.meanings.all %}
                             <div class="leading-loose meanings flex gap-2 flex-wrap my-7">
-
-
                                 {{ meaning }}
-
-
                             </div>
 
                             <div class="flex gap-2" dir="rtl">
                                 <div class="part-of-speech flex flex-row bg-dv_white text-black px-5 py-2 gap-2 rounded">
-                                    <div>
-                                        ބަސް ބެހޭ ބައިތަކުގެ ތެރެއިން މިބަސް ވަންނަ ބަޔަކީ :
-                                    </div>
                                     <div>
                                         {{ meaning.get_part_of_speech }}
                                     </div>
                                 </div>
 
                                 <div class="flex flex-row source bg-dv_white text-black px-5 py-2 gap-2 rounded">
-                                    <div>
-                                        މާނަ ނެގިފައިވަނީ
-                                    </div>
-                                    <div>
-                                        {{ meaning.source }}
-                                    </div>
-                                    <div>
-                                        އިން
-                                    </div>
-
+                                    {{ meaning.get_data_source }}
                                 </div>
                             </div>
-
-
-
-
-
-
-
-
                         {% endfor %}
                     {% endfor %}
                 {% endif %}
@@ -78,13 +57,9 @@
 
                 <div dir="rtl" class="flex flex-col my-10 text-center text-3xl" hx-trigger="every 3s"
                      hx-get="/hx/{{ word }}/{{ session_key }}" hx-swap="outerHTML">
-                    {#                       {% include 'home/hx_comps/on_the_web.html' %}#}
                     <div class="flex flex-wrap gap-5 animate-pulse">
-                        {% include 'icons/sparkle.svg' %}
-                        ބަހުގެ މިސާލުކޮޅެއް ވިކިޕީޑިޔާއިން އެބަ ހޯދާލަން . .
+                        <!-- Why keep a flashing warning as it might just fail too -->
                     </div>
-
-
                 </div>
 
                 <p class="decoration-dv_red"></p>

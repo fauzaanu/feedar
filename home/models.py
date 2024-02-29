@@ -1,4 +1,9 @@
+import os
+import sqlite3
+
 from django.db import models
+
+from mysite.settings.base import BASE_DIR
 
 
 # Create your models here.
@@ -24,6 +29,22 @@ class Word(models.Model):
 
     def __str__(self):
         return self.word
+
+    def get_latin(self):
+        try:
+            latin_db = os.path.join(BASE_DIR, 'home', 'helpers', 'thaana_to_latin', 'data', 'latin.sqlite3')
+            con = sqlite3.connect(latin_db)
+            cursor = con.cursor()
+            query = f"SELECT latin FROM words WHERE word='{self.word}'"
+            cursor.execute(query)
+            result = cursor.fetchone()
+            con.close()
+            if result:
+                return result[0]
+            else:
+                return None
+        except Exception as e:
+            return None
 
 
 class Meaning(models.Model):
@@ -64,6 +85,14 @@ class Meaning(models.Model):
 
         return display_string
 
+    def get_data_source(self):
+
+        if self.source == 'DhivehiNLP':
+            return 'Dhivehi NLP ' + 'ގައި ބޭނުންކުރެވިފައިވާ ޑޭޓާބޭސްއިން'
+
+        elif self.source == 'radheef.mv':
+            return 'radheef.mv ' + 'ގައި ބޭނުންކުރެވިފައިވާ އޭޕީއައި އިން'
+
 
 class Webpage(models.Model):
     """
@@ -95,3 +124,16 @@ class IndexQueue(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
     processed = models.BooleanField(default=False)
+
+
+class SearchManager(models.Model):
+    """
+    A search could just fail. so lets manage it properly
+    """
+    sezzon = models.CharField(max_length=100, blank=True, null=True,
+                              unique=True)  # not session because i dont want to take a risk with the name session
+    date_started = models.DateTimeField(auto_now_add=True)
+    duration = models.DurationField(blank=True, null=True)
+
+    def __str__(self):
+        return self.sezzon

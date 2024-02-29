@@ -22,6 +22,7 @@ huey = "^2.5.0"
 dhivehi-nlp = "^1.0.13"
 requests = "^2.31.0"
 beautifulsoup4 = "^4.12.3"
+pytz = "^2024.1"
 
 
 [build-system]

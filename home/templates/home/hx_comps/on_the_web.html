@@ -1,9 +1,8 @@
 <div dir="rtl" class="flex flex-col my-10" hx-trigger="every 1s"
      hx-get="/hx/{{ word }}/{{ session_key }}" hx-swap="outerHTML">
     <div>
-        <div class="flex flex-wrap gap-5 animate-pulse text-dv_green ">
-            {% include 'icons/sparkle.svg' %}
-            ބަހުގެ މިސާލުކޮޅެއް ވިކިޕީޑިޔާއިން އެބަ ހޯދާލަން . .
+        <div class="flex flex-wrap gap-5 animate-pulse">
+            <!-- Why keep a flashing warning as it might just fail too -->
         </div>
         <div class="flex flex-col gap-2 text-dv_white">
             {% for result in search_result %}
@@ -12,12 +11,9 @@
                          onclick="location.href='{{ result.url }}'"
                          class="flex flex-col font-mono align-middle justify-center text-right rounded p-5 gap-2 cursor-pointer "
                     >
-
                         <p class="web-results text-2xl  pb-5  border-b-2 border-dv_red">
                             {{ result.text_section }}
                         </p>
-
-
                     </div>
                 {% endif %}
             {% endfor %}
