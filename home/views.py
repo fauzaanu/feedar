@@ -19,9 +19,6 @@ from mysite.settings.base import SITE_VERSION
 @cache_page(60 * 60 * 24 * 30,
             key_prefix=SITE_VERSION)
 def home(request):
-    # NEED TO LOAD THE DATABASE TO POSTGRES TO SPEEDUP
-    make_db()
-
     return render(request, 'home/home.html')
 
 

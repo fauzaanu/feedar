@@ -1,4 +1,5 @@
 import logging
+import random
 from datetime import datetime, timedelta
 from string import ascii_letters, punctuation
 from time import sleep
@@ -6,7 +7,8 @@ from time import sleep
 import requests
 from bs4 import BeautifulSoup
 from dhivehi_nlp import dictionary
-from huey.contrib.djhuey import task
+from huey import crontab
+from huey.contrib.djhuey import task, periodic_task
 from home.helpers.mynameisroot import hey_root
 
 from home.helpers.api_calls import get_radheef_val
@@ -17,13 +19,18 @@ from home.helpers.search_process import find_sentence_with_word
 from home.models import Word, Webpage, PartOfSpeech
 
 
-@task()
+@periodic_task(crontab(minute=10, hour=0))
 def make_db():
     """
     Make the database
     """
     logging.error("Huey started")
     words = dictionary.get_wordlist()
+    words_in_db = Word.objects.all().values_list('word', flat=True)
+
+    words = list(set(words) - set(words_in_db))
+    # take 1000 random words or less
+    words = random.sample(words, 1000) if len(words) > 1000 else words
 
     total_words = len(words)
     skipped_words = int()
