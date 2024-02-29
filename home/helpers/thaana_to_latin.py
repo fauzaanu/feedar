@@ -99,7 +99,6 @@ def thaana_to_latin(text):
     return text
 
 
-
 # letting copilot do it first
 if __name__ == "__main__":
     print(thaana_to_latin("ކަޅުތުއްކަލާކޮށި"))
