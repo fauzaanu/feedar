@@ -6,7 +6,6 @@
 <head>
     {% include 'meta.html' %}
     {% include 'ganal.html' %}
-    {#    {% include 'toast/toast_head.html' %}#}
     {% include 'thaanakeyboard.html' %}
     <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
     {% block header_scripts %}
@@ -26,10 +25,10 @@
 
 <main class="">
     {% block content %}
-
     {% endblock %}
-</main>
 
+</main>
+{% include 'advert.html' %}
 {% block extra_js %}
 {% endblock %}
 
