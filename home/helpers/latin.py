@@ -7,6 +7,8 @@ from string import ascii_letters
 
 import requests
 
+from home.helpers.formatting import is_dhivehi_word
+
 
 def latin_to_thaana(word):
     """
@@ -43,19 +45,7 @@ def latin_to_thaana(word):
         with open("failed_words.txt", "w", encoding='utf-8') as f:
             f.write(word)
         logging.error(f"Failed to convert {word} to thaana")
-def is_dhivehi_word(word: str):
-    """
-    Is it a dhivehi word?
-    """
-    for letter in word:
-        if letter in ascii_letters:
-            return False
 
-        # \u0780-\u07B1 is the range of dhivehi letters in the thaana unicode block -
-        # (https://github.com/hadithmv/hadithmv.github.io/blob/ebc8c9780b9e5d9f9551ea69f06c4a2862301541/js/quranHmv-script.js#L1113)
-        if letter not in [chr(i) for i in range(1920, 1970)]:  # 1920 to 1970 is the range of thaana unicode block
-            return False
-    return True
 
 
 from dhivehi_nlp import dictionary

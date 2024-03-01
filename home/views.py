@@ -38,22 +38,6 @@ def search_english(request):
         return HttpResponse('This is not a dhivehi word')
 
 
-def on_demand_english_removal(word):
-    pages = Webpage.objects.filter(words__word=word, text_section__isnull=False)
-    for page in pages:
-        text = page.text_section
-        if page.text_section:
-
-            # remove english words
-            for word in text.split():
-                if not is_dhivehi_word(word):
-                    text = text.replace(word, '')
-
-            page.text_section = text
-            page.save()
-    return True
-
-
 def explore_word(request, word):
     if not word:
         return HttpResponse('Please enter a word')
@@ -145,9 +129,6 @@ def hx_load_web_data(request, word, session_key):
                 }
             )
 
-        # print(f"Server Session key", server_session_key)
-        # print(f"Client Session key", session_key)
-        # print("Amount of pages", Webpage.objects.filter(words__word=word).count())
         if not session_key:
             return HttpResponse('not')
 
@@ -202,3 +183,6 @@ def hx_load_web_data(request, word, session_key):
                 'search_result': Webpage.objects.filter(words__word=word),
             }
         )
+
+
+def hx_load_related(request):
