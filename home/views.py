@@ -1,4 +1,3 @@
-import logging
 import random
 from datetime import datetime, timedelta
 
@@ -8,11 +7,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import cache_page
 
-from home.helpers.db_process import process_meaning
-from home.helpers.dhivehi_nlp_ext import process_related_words, get_part_of_speech
+from home.helpers.dhivehi_nlp_ext import process_related_words
 from home.helpers.english_removal import on_demand_english_removal
 from home.helpers.formatting import remove_punctuation, is_dhivehi_word, preprocess_word
-from home.models import Word, Webpage, SearchResponse, PartOfSpeech, SearchManager
+from home.models import Word, Webpage, SearchResponse, SearchManager
 from home.tasks import google_custom_search
 from mysite.settings.base import SITE_VERSION
 

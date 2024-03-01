@@ -19,7 +19,7 @@ from home.helpers.search_process import find_sentence_with_word
 from home.models import Word, Webpage, PartOfSpeech, SearchResponse
 
 
-@periodic_task(crontab(minute='*/10'))
+@periodic_task(crontab(minute='*/60'))
 def make_db():
     """
     Make the database
