@@ -10,6 +10,7 @@ from django.views.decorators.cache import cache_page
 
 from home.helpers.db_process import process_meaning
 from home.helpers.dhivehi_nlp_ext import process_related_words, get_part_of_speech
+from home.helpers.english_removal import on_demand_english_removal
 from home.helpers.formatting import remove_punctuation, is_dhivehi_word, preprocess_word
 from home.helpers.search_process import google_custom_search
 from home.models import Word, Webpage, SearchResponse, PartOfSpeech, SearchManager
@@ -186,3 +187,5 @@ def hx_load_web_data(request, word, session_key):
 
 
 def hx_load_related(request):
+    pass
+
