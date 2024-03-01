@@ -1,5 +1,6 @@
 import logging
 import random
+from datetime import date
 from string import ascii_letters, punctuation
 from time import sleep
 
@@ -9,13 +10,13 @@ from dhivehi_nlp import dictionary
 from huey import crontab
 from huey.contrib.djhuey import task, periodic_task
 
-from home.helpers.api_calls import get_radheef_val
+from home.helpers.api_calls import get_radheef_val, google_custom_search_api
 from home.helpers.db_process import process_meaning
 from home.helpers.dhivehi_nlp_ext import get_part_of_speech
-from home.helpers.formatting import preprocess_word
+from home.helpers.formatting import preprocess_word, remove_all_english
 from home.helpers.mynameisroot import hey_root
 from home.helpers.search_process import find_sentence_with_word
-from home.models import Word, Webpage, PartOfSpeech
+from home.models import Word, Webpage, PartOfSpeech, SearchResponse
 
 
 @periodic_task(crontab(minute='*/10'))
@@ -63,6 +64,49 @@ def make_db():
     hey_root(msg)
     logging.error(msg)
 
+
+
+
+@task
+def google_custom_search(word):
+    word_obj, _ = Word.objects.get_or_create(word=word)
+
+    if Webpage.objects.filter(words__word=word).exists():
+        all_pages = Webpage.objects.filter(words__word=word)
+        for page in all_pages:
+            if page.text_section:
+                text = remove_all_english(page.text_section)
+
+                if text.isspace():
+                    page.status = 'failed'
+                    page.save()
+                    return None
+
+                page.text_section = text
+                page.save()
+        return None
+
+    # check if our daily limit is above 100
+    current_requests = SearchResponse.objects.filter(date=date.today()).count()
+    if current_requests > 100:
+        return None
+
+    response = google_custom_search_api(word)
+    response_json = response.json()
+    amount = response_json['searchInformation']['totalResults']
+
+    if amount == '0':
+        return None
+
+    items = response.json()['items']
+    urls = [item['link'] for item in items]
+
+    search = SearchResponse.objects.create(word=word_obj)
+
+    for url in urls:
+        search.link.add(Webpage.objects.get_or_create(url=url)[0])
+        process_weblink(url, word)
+    return True
 
 def process_radheef_api(word):
     """

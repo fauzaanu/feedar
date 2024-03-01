@@ -12,8 +12,8 @@ from home.helpers.db_process import process_meaning
 from home.helpers.dhivehi_nlp_ext import process_related_words, get_part_of_speech
 from home.helpers.english_removal import on_demand_english_removal
 from home.helpers.formatting import remove_punctuation, is_dhivehi_word, preprocess_word
-from home.helpers.search_process import google_custom_search
 from home.models import Word, Webpage, SearchResponse, PartOfSpeech, SearchManager
+from home.tasks import google_custom_search
 from mysite.settings.base import SITE_VERSION
 
 
@@ -87,7 +87,7 @@ def explore_word(request, word):
         request.session['session_key'] = session_key
         SearchManager.objects.get_or_create(sezzon=session_key, duration=timedelta(seconds=60))
 
-        # process the google search
+        # a huey task : this wont delay the response
         google_custom_search(word)
 
         context = {
@@ -95,7 +95,6 @@ def explore_word(request, word):
             'r_words': Word.objects.filter(related_words__word=word),
             'word': word,
             'words': Word.objects.filter(word=word),
-            # 'search_result': Webpage.objects.filter(words__word=word, text_section__isnull=False),
         }
         return render(request, 'home/results.html', context)
 
