@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(
-            "UPDATE django_site SET domain='radheefu.com', name='RADHEEFU' WHERE id=1;"
-        )
+        # migrations.RunSQL(
+        #     "UPDATE django_site SET domain='radheefu.com', name='RADHEEFU' WHERE id=1;"
+        # )
     ]
