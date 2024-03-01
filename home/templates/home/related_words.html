@@ -1,0 +1,41 @@
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
+    <h1 class="text-3xl font-faruma text-dv_white col-span-full">
+        އެހެން ބަސްބަހުގެ މާނައިގައި މިބަސް ހިމެނޭ ބަސްތައް
+    </h1>
+    {% if r_words %}
+        {% for r_word in r_words %}
+            <div class="grid grid-cols-2 gap-2 items-center text-dv_white rounded-lg bg-dv_white p-5 "
+                 dir="rtl">
+                <div class="col-span-full flex justify-between gap-2">
+                    <h1 class="flex text-3xl font-faruma text-primary">
+                        {{ r_word }}
+                    </h1>
+                    <div id="play-sound_{{ r_word }}"
+                         class="bg-primary/10 p-2 rounded text-primary">
+                        {% include 'icons/volume-1.svg' %}
+                    </div>
+                    <audio controls
+                           class="hidden"
+                           id="audio_{{ r_word }}"
+                           src="https://dhivehi.mv/tools/tts/data/?g=female&q={{ r_word }}"
+                    >
+                    </audio>
+                </div>
+
+
+                <div onclick="window.location.href='/explore/{{ r_word }}'"
+                     class="bg-primary text-dv_white col-span-full text-center px-2 py-2 cursor-pointer rounded">
+                    މިބަހުގެ ތަފްސީލަށް ދޭ
+                </div>
+            </div>
+
+
+
+            <script>
+                document.getElementById('play-sound_{{ r_word }}').addEventListener('click', function () {
+                    document.getElementById('audio_{{ r_word }}').play();
+                });
+            </script>
+        {% endfor %}
+    {% endif %}
+</div>

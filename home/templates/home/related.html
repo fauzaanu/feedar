@@ -18,94 +18,9 @@
                     </div>
                 {% endif %}
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
-                    {% if words %}
-                        {% for word in words %}
-                            <div class="grid grid-cols-2 gap-2 items-center text-dv_white rounded-lg bg-dv_white p-5 "
-                                 dir="rtl">
-                                <div class="col-span-full flex justify-between gap-2">
-                                    <h1 class="flex text-3xl font-faruma text-primary">
-                                        {{ word }}
-                                    </h1>
-                                    <div id="play-sound_{{ word }}"
-                                         class="bg-dv_red p-2 rounded border-primary border-2">
-                                        {% include 'icons/volume-1.svg' %}
-                                    </div>
-                                    <audio controls
-                                           class="hidden"
-                                           id="audio_{{ word }}"
-                                           src="https://dhivehi.mv/tools/tts/data/?g=female&q={{ word }}"
-                                    >
-                                    </audio>
-                                </div>
-
-
-                                <div onclick="window.location.href='/explore/{{ word }}'"
-                                     class="bg-primary text-dv_white col-span-full text-center px-2 py-2 cursor-pointer rounded">
-                                    މިބަހުގެ ތަފްސީލަށް ދޭ
-                                </div>
-                            </div>
-
-
-
-                            <script>
-                                document.getElementById('play-sound_{{ word }}').addEventListener('click', function () {
-                                    document.getElementById('audio_{{ word }}').play();
-                                });
-                            </script>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-
+                {% include 'home/related_words.html' %}
                 {% include 'home/search_form.html' %}
             </div>
         </div>
     </div>
-{% endblock %}
-
-
-{% block extra_js %}
-    <script>
-        var meanings = document.querySelectorAll('.meanings');
-        meanings.forEach(function (meaning) {
-            // split the meaning into words
-            var words = meaning.textContent.split(' ');
-            var newMeaning = '';
-            words.forEach(function (word) {
-
-                // if the word is empty skip it or if its a space or if its a number
-                if (word === '' || word === ' ' || !isNaN(word)) {
-                    return;
-                }
-
-                newMeaning += '<a href="/explore/' + word + '" class="text-primary leading-loose p-2 rounded bg-white border-b-2 border-dv_green">' + word + '</a> ';
-            });
-            meaning.innerHTML = newMeaning;
-            meaning.classList.add('p-2', 'leading-loose');
-        });
-
-
-        // find the main word from .web-results and place a border around it after adding a span around it
-        var webResults = document.querySelectorAll('.web-results');
-        const main_word = '{{ word }}';
-        webResults.forEach(function (webResult) {
-            var words = webResult.textContent.split(' ');
-            var newResult = '';
-            words.forEach(function (word) {
-                console.log(word);
-                if (word === '' || word === ' ' || !isNaN(word)) {
-                    return;
-                }
-                if (word === main_word) {
-                    newResult += '<span class="text-dv_white px-2 bg-primary rounded">' + word + '</span> ';
-                } else {
-                    newResult += word + ' ';
-                }
-            });
-            webResult.innerHTML = newResult;
-        });
-
-
-    </script>
-
 {% endblock %}

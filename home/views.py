@@ -62,15 +62,14 @@ def explore_word(request, word):
         return HttpResponse('This is not a dhivehi word')
 
     meaning = dictionary.get_definition(preprocess_word(word))
+    process_related_words(word)
 
     # Meaning want found, therefore, lets find related words
     if not meaning:
-        process_related_words(word)
-
         context = {
             'related_only': True,
             'word': word,
-            'words': Word.objects.filter(related_words__word=word),
+            'r_words': Word.objects.filter(related_words__word=word),
         }
         return render(request, 'home/related.html', context)
 
@@ -108,6 +107,7 @@ def explore_word(request, word):
 
         context = {
             "session_key": session_key,
+            'r_words': Word.objects.filter(related_words__word=word),
             'word': word,
             'words': Word.objects.filter(word=word),
             # 'search_result': Webpage.objects.filter(words__word=word, text_section__isnull=False),

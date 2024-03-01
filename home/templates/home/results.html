@@ -62,9 +62,7 @@
                     </div>
                 </div>
 
-                <p class="decoration-dv_red"></p>
-
-
+                {% include 'home/related_words.html' %}
                 {% include 'home/search_form.html' %}
             </div>
         </div>
@@ -74,9 +72,6 @@
 
 {% block extra_js %}
     <script>
-        // for every word inside of .meanings make it a url with the word
-        // if the word is nurse it should be /explore/nurse
-        // use vanilla js
         const meanings = document.querySelectorAll('.meanings');
         console.log(meanings);
         meanings.forEach(meaning => {
@@ -85,7 +80,8 @@
             console.log(words);
             let new_meaning = '';
             for (const word of words) {
-                if (word === '') {
+                // if space
+                if (word === '' || word === ' ' || word.match(/^\s+$/) || word.match(/^\s+$/)) {
                     continue;
                 }
 
@@ -94,17 +90,19 @@
                     continue;
                 }
 
-                let classText = "hover:text-dv_green text-2xl decoration-dv_red/30 underline cursor-pointer";
+                let classText = "hover:text-dv_white hover:bg-dv_green text-primary bg-dv_green p-5 text-2xl decoration-primary underline rounded cursor-pointer";
                 new_meaning += `<a href="/explore/${word}" class="${classText}">${word}</a>`;
             }
+            // remove spaces from the beginning and end of the string
+            new_meaning = new_meaning.trim();
             meaning.innerHTML = new_meaning;
 
         });
 
 
-        // whenever htmx swaps the content, we need to find the word from the .web-results class and mark it with green color
+        // htmx swap event
         document.body.addEventListener('htmx:afterSwap', function (event) {
-            const text_sections = document.querySelectorAll('.web-results'); // Use querySelectorAll to select all elements
+            const text_sections = document.querySelectorAll('.web-results');
             const mainWord = "{{ word }}";
 
             text_sections.forEach(section => {
@@ -117,8 +115,7 @@
                     if (word.length === 1) {
                         continue;
                     }
-
-
+                    
                     // if the word has odd number of characters
                     if (word.length % 2 !== 0) {
                         continue;
@@ -134,8 +131,6 @@
                 section.innerHTML = new_text;
             });
         });
-
-
     </script>
 
 {% endblock %}
