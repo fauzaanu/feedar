@@ -14,12 +14,36 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+from django.contrib import admin, sitemaps
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
+
+from django.contrib.sitemaps import Sitemap
+from django.utils import timezone
+
+from home.models import Word
+
+
+class RadheefSitemap(Sitemap):
+    changefreq = "never"
+
+    def items(self):
+        # last 50 words
+        return Word.objects.all().order_by("-id")[:50]
+
+    def location(self, obj):
+        return f"/explore/{obj.word}"
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("pwa.urls")),
     path('', include('home.urls')),
     path('about/', include('about.urls')),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": {"radheef": RadheefSitemap()}},
+        name="django.contrib.sitemaps.views.sitemap",
+    )
 ]
