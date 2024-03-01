@@ -59,11 +59,6 @@ MIDDLEWARE = [
 ]
 
 SITE_ID = 1
-SITE_NAME = "RADHEEFU.COM"
-
-
-
-
 
 ROOT_URLCONF = 'mysite.urls'
 
@@ -148,4 +143,4 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
 
 # Site Version
-SITE_VERSION = "0.4.7"
+SITE_VERSION = "0.4.8"

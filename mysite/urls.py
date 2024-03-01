@@ -25,11 +25,13 @@ from home.models import Word
 
 
 class RadheefSitemap(Sitemap):
-    changefreq = "never"
+    changefreq = "daily"
 
     def items(self):
         # last 50 words
-        return Word.objects.all().order_by("-id")[:50]
+        return Word.objects.filter(
+            word__isnull=False
+        ).order_by("-id")[:10000]
 
     def location(self, obj):
         return f"/explore/{obj.word}"
