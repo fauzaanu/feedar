@@ -89,17 +89,10 @@ def hx_load_web_data(request, word, session_key):
 
         # get the session manager
         session_manager = SearchManager.objects.get(sezzon=server_session_key)
-
         session_started_on = session_manager.date_started
         session_duration = session_manager.duration
-
         current_time = datetime.now(pytz.timezone('Indian/Maldives'))
         current_duration = current_time - session_started_on
-
-        print(f"Session started on: {session_started_on}")
-        print(f"Session duration: {session_duration}")
-        print(f"Current time: {current_time}")
-        print(f"Current duration: {current_duration}")
 
         if current_duration > session_duration:
             return render(
@@ -123,48 +116,35 @@ def hx_load_web_data(request, word, session_key):
 
         success = Webpage.objects.filter(words__word=word, status='success').count()
         failed = Webpage.objects.filter(words__word=word, status='failed').count()
-        rest = Webpage.objects.filter(words__word=word).count()
         amount_of_results = success + failed
-
-        print(success, failed, amount_of_results, rest)
 
         try:
             search = SearchResponse.objects.filter(word=Word.objects.get(word=word)).first()
+            amount_of_results_possible = search.link.count()
+
+            # if no results are possible send the final response
+            # if we have more than 10 results, send the final response
+            if amount_of_results_possible == 0 or amount_of_results >= amount_of_results_possible:
+                return render(
+                    request,
+                    'home/hx_comps/on_the_web/final.html',
+                    {
+                        'word': word,
+                        'search_result': Webpage.objects.filter(words__word=word),
+                    }
+                )
+
+            return render(
+                request,
+                'home/hx_comps/on_the_web/on_the_web.html',
+                {
+                    'word': word,
+                    'session_key': server_session_key,
+                    'search_result': Webpage.objects.filter(words__word=word),
+                }
+            )
         except SearchResponse.DoesNotExist:
             return HttpResponse('ERROR')
-
-        amount_of_results_possible = search.link.count()
-        print("Amount of results possible", amount_of_results_possible)
-
-        if amount_of_results_possible == 0:
-            return render(
-                request,
-                'home/hx_comps/on_the_web/final.html',
-                {
-                    'word': word,
-                    'search_result': Webpage.objects.filter(words__word=word),
-                }
-            )
-
-        if amount_of_results >= amount_of_results_possible:
-            return render(
-                request,
-                'home/hx_comps/on_the_web/final.html',
-                {
-                    'word': word,
-                    'search_result': Webpage.objects.filter(words__word=word),
-                }
-            )
-
-        return render(
-            request,
-            'home/hx_comps/on_the_web/on_the_web.html',
-            {
-                'word': word,
-                'session_key': server_session_key,
-                'search_result': Webpage.objects.filter(words__word=word),
-            }
-        )
 
 
 def hx_load_related(request, word, session_key):
