@@ -65,9 +65,7 @@ def make_db():
     logging.error(msg)
 
 
-
-
-@task
+@task()
 def google_custom_search(word):
     word_obj, _ = Word.objects.get_or_create(word=word)
 
@@ -107,6 +105,7 @@ def google_custom_search(word):
         search.link.add(Webpage.objects.get_or_create(url=url)[0])
         process_weblink(url, word)
     return True
+
 
 def process_radheef_api(word):
     """

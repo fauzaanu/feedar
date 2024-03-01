@@ -14,6 +14,10 @@ htmx_urls = [
          views.hx_load_web_data,
          name='hx_load_web_data'
          ),
+    path('hx/related/<str:word>/<str:session_key>/',
+         views.hx_load_related,
+         name='hx_load_related'
+         ),
 ]
 
 urlpatterns += htmx_urls

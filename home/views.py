@@ -23,8 +23,6 @@ def home(request):
     return render(request, 'home/home.html')
 
 
-@cache_page(60 * 60 * 24 * 30,
-            key_prefix=SITE_VERSION)
 def search_english(request):
     word = request.GET.get('word')
 
@@ -46,6 +44,8 @@ def explore_word(request, word):
     if not is_dhivehi_word(word):
         return HttpResponse('This is not a dhivehi word')
 
+    on_demand_english_removal(word)
+
     meaning = dictionary.get_definition(preprocess_word(word))
     process_related_words(word)
 
@@ -60,26 +60,11 @@ def explore_word(request, word):
 
     # Meaning was found, lets process it
     else:
-        # removed process function : things could break
-        on_demand_english_removal(word)
-
+        # As we have completed the entire process we are sure that our database contains everything in the dictionary
+        # uncomment this section if starting over todo: see this comment
         # que maybe ongoing : to serve the user right away we need to process just this word
-        logging.error(f"Processing word: {word}")
-        meaning_dnlp = dictionary.get_definition(preprocess_word(word))
-
-        part_of_speech = None
-        if meaning_dnlp:
-            try:
-                part_of_speech = get_part_of_speech(word)
-            except ValueError:
-                part_of_speech = None
-
-        if meaning_dnlp:
-            word, _ = Word.objects.get_or_create(word=word)
-            part_of_speech, _ = PartOfSpeech.objects.get_or_create(poc=part_of_speech)
-            word.category.add(part_of_speech)
-            process_meaning(meaning_dnlp, word, 'DhivehiNLP')
-            logging.error(f"Meaning from dhivehiNLP added: {meaning_dnlp}")
+        # logging.error(f"Processing word: {word}")
+        # meaning_dnlp = dictionary.get_definition(preprocess_word(word))
 
         if request.session.get('session_key'):
             del request.session['session_key']
@@ -92,7 +77,6 @@ def explore_word(request, word):
 
         context = {
             "session_key": session_key,
-            'r_words': Word.objects.filter(related_words__word=word),
             'word': word,
             'words': Word.objects.filter(word=word),
         }
@@ -122,7 +106,7 @@ def hx_load_web_data(request, word, session_key):
         if current_duration > session_duration:
             return render(
                 request,
-                'home/hx_comps/final.html',
+                'home/hx_comps/on_the_web/final.html',
                 {
                     'word': word,
                     'search_result': Webpage.objects.filter(words__word=word),
@@ -157,7 +141,7 @@ def hx_load_web_data(request, word, session_key):
         if amount_of_results_possible == 0:
             return render(
                 request,
-                'home/hx_comps/final.html',
+                'home/hx_comps/on_the_web/final.html',
                 {
                     'word': word,
                     'search_result': Webpage.objects.filter(words__word=word),
@@ -167,7 +151,7 @@ def hx_load_web_data(request, word, session_key):
         if amount_of_results >= amount_of_results_possible:
             return render(
                 request,
-                'home/hx_comps/final.html',
+                'home/hx_comps/on_the_web/final.html',
                 {
                     'word': word,
                     'search_result': Webpage.objects.filter(words__word=word),
@@ -176,7 +160,7 @@ def hx_load_web_data(request, word, session_key):
 
         return render(
             request,
-            'home/hx_comps/on_the_web.html',
+            'home/hx_comps/on_the_web/on_the_web.html',
             {
                 'word': word,
                 'session_key': server_session_key,
@@ -185,6 +169,24 @@ def hx_load_web_data(request, word, session_key):
         )
 
 
-def hx_load_related(request):
-    pass
+def hx_load_related(request, word, session_key):
+    if session_key and word:
+        server_session_key = request.session.get('session_key')
+        server_session_key = int(server_session_key)
+        client_session_key = int(session_key)
 
+        if client_session_key != server_session_key:
+            return HttpResponse('Invalid session key')
+
+        word = remove_punctuation(word)
+
+        if not is_dhivehi_word(word):
+            return HttpResponse('This is not a dhivehi word')
+
+        return render(
+            request,
+            'home/hx_comps/related_words/final.html',
+            {
+                'r_words': Word.objects.filter(related_words__word=word),
+            }
+        )
