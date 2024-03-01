@@ -28,3 +28,8 @@ def manifest(request):
 
 def offline(request):
     return render(request, "pwa/offline.html")
+
+
+def robots(request):
+    # allow everything for robots.txt
+    return HttpResponse("User-agent: *\nDisallow:", content_type="text/plain")
