@@ -6,6 +6,7 @@ from dhivehi_nlp import dictionary
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
+from django.views.decorators.http import require_POST
 
 from home.helpers.dhivehi_nlp_ext import process_related_words
 from home.helpers.english_removal import on_demand_english_removal
@@ -20,9 +21,9 @@ from mysite.settings.base import SITE_VERSION
 def home(request):
     return render(request, 'home/home.html')
 
-
+@require_POST
 def search_english(request):
-    word = request.GET.get('word')
+    word = request.POST.get('word')
 
     if not word:
         return HttpResponse('Please enter a word')
@@ -144,7 +145,24 @@ def hx_load_web_data(request, word, session_key):
                 }
             )
         except SearchResponse.DoesNotExist:
-            return HttpResponse('ERROR')
+            return render(
+                request,
+                'home/hx_comps/on_the_web/final.html',
+                {
+                    'word': word,
+                    'search_result': Webpage.objects.filter(words__word=word),
+                }
+            )
+
+        except AttributeError:
+            return render(
+                request,
+                'home/hx_comps/on_the_web/final.html',
+                {
+                    'word': word,
+                    'search_result': Webpage.objects.filter(words__word=word),
+                }
+            )
 
 
 def hx_load_related(request, word, session_key):

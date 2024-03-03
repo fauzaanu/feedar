@@ -1,4 +1,4 @@
-<form action="{% url 'search_english' %}" method="get">
+<form action="{% url 'search_english' %}" method="post">
     {% csrf_token %}
     <input type="text" name="word"
            dir="rtl"
@@ -10,7 +10,7 @@
         ހޯދާ
     </button>
     <div onclick="window.location.href = '{% url 'about' %}'"
-            class="decoration-dv_red/50 underline text-dv_white text-center mt-3 font-faruma text-xl my-10 cursor-pointer">
+         class="decoration-dv_red/50 underline text-dv_white text-center mt-3 font-faruma text-xl my-10 cursor-pointer">
         އަނެއްކާވެސް އެހެން ރަދީފެއްތަ؟
     </div>
 </form>
