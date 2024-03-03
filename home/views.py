@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import pytz
 from dhivehi_nlp import dictionary
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views.decorators.cache import cache_page
 
 from home.helpers.dhivehi_nlp_ext import process_related_words
@@ -30,7 +30,7 @@ def search_english(request):
     word = remove_punctuation(word)
 
     if is_dhivehi_word(word):
-        return redirect('explore_word', word=word)
+        return explore_word(request, word)
     else:
         return HttpResponse('This is not a dhivehi word')
 
