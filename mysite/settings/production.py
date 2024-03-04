@@ -46,6 +46,7 @@ CACHES = {
             # "redis://127.0.0.1:6378",  # read-replica 1
             # "redis://127.0.0.1:6377",  # read-replica 2
         ],
+        "KEY_PREFIX": "radheefu_com",
     }
 }
 
@@ -72,4 +73,3 @@ from redis import ConnectionPool
 
 pool = ConnectionPool()
 HUEY = RedisHuey(SITE_NAME, connection_pool=pool.from_url(REDIS_URL))
-
