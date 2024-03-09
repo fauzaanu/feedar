@@ -143,4 +143,4 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
 
 # Site Version
-SITE_VERSION = "0.5.2"
+SITE_VERSION = "0.5.3"
