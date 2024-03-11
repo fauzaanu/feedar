@@ -27,8 +27,6 @@ FIRST_PARTY_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    # "cloudinary_storage",
-    # "cloudinary",
     "huey.contrib.djhuey",
 ]
 
@@ -57,7 +55,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-
 SITE_ID = 1
 
 ROOT_URLCONF = 'mysite.urls'
@@ -104,11 +101,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'Indian/Maldives'
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
@@ -117,30 +111,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(PROJECT_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-# Media files
-# For mediafiles cloudinary seems to be a great option as it is free and everything is pretty straightforward
-# whitenoise is still used for static files (Just an opinion)
-
-# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-# MEDIA_URL = "/media/"
-# DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-
-# CLOUDINARY_STORAGE = {
-#     "CLOUD_NAME": "",
-#     "API_KEY": "",
-#     "API_SECRET": "",
-#     "STATICFILES_MANIFEST_ROOT": os.path.join(BASE_DIR, "cloudinary"),
-#     "QUALITY": "auto:best",
-# }
-
-
-# Cache settings
-# https://docs.djangoproject.com/en/5.0/topics/cache/#setting-up-the-cache
-
-# Crispy forms settings
-CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
-CRISPY_TEMPLATE_PACK = "tailwind"
 
 # Site Version
 SITE_VERSION = "0.5.3"

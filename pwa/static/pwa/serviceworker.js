@@ -1,6 +1,7 @@
 // v2
 
-const assets = ["/"];
+
+const assets = [];
 
 self.addEventListener("install", event => {
     event.waitUntil( //incase the assets dont get cached in 40 secs
