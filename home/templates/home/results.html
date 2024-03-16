@@ -35,19 +35,21 @@
 
 
                         {% for meaning in word.meanings.all %}
-                            <div class="leading-loose meanings flex gap-2 flex-wrap my-7">
-                                {{ meaning }}
-                            </div>
-
-                            <div class="flex gap-2" dir="rtl">
-                                <div class="part-of-speech flex flex-row bg-dv_white text-black px-5 py-2 gap-2 rounded">
-                                    <div>
-                                        {{ meaning.get_part_of_speech }}
-                                    </div>
+                            <div class="border-2 border-dv_green p-3 my-5 rounded">
+                                <div class="leading-loose meanings flex gap-2 flex-wrap my-7">
+                                    {{ meaning }}
                                 </div>
 
-                                <div class="flex flex-row source bg-dv_white text-black px-5 py-2 gap-2 rounded">
-                                    {{ meaning.get_data_source }}
+                                <div class="flex gap-2" dir="rtl">
+                                    <div class="part-of-speech flex flex-row text-dv_white px-5 py-2 gap-2 rounded">
+                                        <div>
+                                            {{ meaning.get_part_of_speech }}
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-row source text-dv_white px-5 py-2 gap-2 rounded">
+                                        {{ meaning.get_data_source }}
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
@@ -90,7 +92,7 @@
                     continue;
                 }
 
-                let classText = "hover:text-dv_white hover:bg-dv_green text-primary bg-dv_green p-5 text-2xl decoration-primary underline rounded cursor-pointer";
+                let classText = "hover:text-dv_white hover:bg-dv_green text-primary bg-dv_white p-5 text-2xl decoration-primary underline rounded cursor-pointer";
                 new_meaning += `<a href="/explore/${word}" class="${classText}">${word}</a>`;
             }
             // remove spaces from the beginning and end of the string
@@ -115,7 +117,7 @@
                     if (word.length === 1) {
                         continue;
                     }
-                    
+
                     // if the word has odd number of characters
                     if (word.length % 2 !== 0) {
                         continue;
