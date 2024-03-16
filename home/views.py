@@ -102,7 +102,7 @@ def hx_load_web_data(request, word, session_key):
                 'home/hx_comps/on_the_web/final.html',
                 {
                     'word': word,
-                    'search_result': Webpage.objects.filter(words__word=word),
+                    'search_result': Webpage.objects.filter(words__word=word, text_section__isnull=False),
                 }
             )
 
@@ -132,7 +132,7 @@ def hx_load_web_data(request, word, session_key):
                     'home/hx_comps/on_the_web/final.html',
                     {
                         'word': word,
-                        'search_result': Webpage.objects.filter(words__word=word),
+                        'search_result': Webpage.objects.filter(words__word=word, text_section__isnull=False),
                     }
                 )
 
@@ -151,7 +151,7 @@ def hx_load_web_data(request, word, session_key):
                 'home/hx_comps/on_the_web/final.html',
                 {
                     'word': word,
-                    'search_result': Webpage.objects.filter(words__word=word),
+                    'search_result': Webpage.objects.filter(words__word=word, text_section__isnull=False),
                 }
             )
 
@@ -161,7 +161,7 @@ def hx_load_web_data(request, word, session_key):
                 'home/hx_comps/on_the_web/final.html',
                 {
                     'word': word,
-                    'search_result': Webpage.objects.filter(words__word=word),
+                    'search_result': Webpage.objects.filter(words__word=word, text_section__isnull=False)
                 }
             )
 

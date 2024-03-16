@@ -6,18 +6,16 @@
             </h2>
             <div class="flex flex-col gap-2 text-dv_white">
                 {% for result in search_result %}
-                    {% if result.text_section %}
-                        <div dir="rtl"
-                             onclick="location.href='{{ result.url }}'"
-                             class="flex flex-col font-mono align-middle justify-center text-right rounded p-5 gap-2 cursor-pointer "
-                        >
+                    <div dir="rtl"
+                         onclick="location.href='{{ result.url }}'"
+                         class="flex flex-col font-mono align-middle justify-center text-right rounded p-5 gap-2 cursor-pointer "
+                    >
 
-                            <p class="web-results text-2xl pb-5 border-b-2 border-dv_red">
-                                {{ result.text_section }}
-                            </p>
+                        <p class="web-results text-2xl pb-5 border-b-2 border-dv_red">
+                            {{ result.text_section }}
+                        </p>
 
-                        </div>
-                    {% endif %}
+                    </div>
                 {% endfor %}
             </div>
         </div>
