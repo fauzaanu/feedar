@@ -10,13 +10,10 @@ ALLOWED_HOSTS = [
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
-
 CSRF_TRUSTED_ORIGINS = [
     "https://radheefu.com",
 ]
-
 CSRF_COOKIE_DOMAIN = "radheefu.com"
-CSRF_COOKIE_SECURE = True
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
