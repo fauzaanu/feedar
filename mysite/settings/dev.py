@@ -10,7 +10,7 @@ ALLOWED_HOSTS = [
 SECRET_KEY = "django-insecure-22sgmf6qdtp+uq@e@cv(y7=5bne^7-8+fj4_u8yg2tl0ln!4fk"
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://example.com"
+    "https://radheefu.com"
 ]
 
 # Database

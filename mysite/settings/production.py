@@ -16,6 +16,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 CSRF_COOKIE_DOMAIN = ".radheefu.com"
 SESSION_COOKIE_DOMAIN = ".radheefu.com"
+CSRF_COOKIE_SECURE = True
 
 
 # Database
