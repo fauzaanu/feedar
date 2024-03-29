@@ -113,4 +113,4 @@ STATICFILES_DIRS = [os.path.join(PROJECT_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Site Version
-SITE_VERSION = "0.5.5"
+SITE_VERSION = "0.5.6"
