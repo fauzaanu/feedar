@@ -187,3 +187,7 @@ def hx_load_related(request, word, session_key):
                 'r_words': Word.objects.filter(related_words__word=word),
             }
         )
+
+
+def csrf_failure(request, reason=""):
+    return render(request, 'home/csrf_failure.html', {'reason': reason})

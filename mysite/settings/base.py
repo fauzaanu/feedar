@@ -113,3 +113,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Site Version
 SITE_VERSION = "0.5.8"
+
+CSFRF_FAILURE_VIEW = 'home.views.csrf_failure'
