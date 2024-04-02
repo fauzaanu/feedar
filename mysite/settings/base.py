@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
-
 from dotenv import load_dotenv
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,7 +21,7 @@ SITE_NAME = "RADHEEFU"
 
 FIRST_PARTY_APPS = [
     "home",
-    "pwa",
+    # "pwa",
     'about',
 ]
 
@@ -113,4 +112,4 @@ STATICFILES_DIRS = [os.path.join(PROJECT_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Site Version
-SITE_VERSION = "0.5.7"
+SITE_VERSION = "0.5.8"
